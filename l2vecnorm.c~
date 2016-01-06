@@ -11,7 +11,7 @@ int main( int argc, char *argv[]) {
 
     // initialize
     for (int i = 0; i < n; ++i) {
-        u[i] = i;
+        u[i] = i+1;
     }
 
     // l2-norm
