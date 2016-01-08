@@ -1,11 +1,11 @@
 
-Stage 1
---------
+Initial setup
+-------------
 
 - Backup hard drive
 - install Ubuntu
 
-Stage 2
+Lesson 1
 -------
 
 - Setup account on Github
@@ -66,4 +66,11 @@ git remote -v
 
 git push origin master
 git status
+
+Lesson 2
+--------
+
+gcc -o l2vecnorm l2vecnorm.c -std=gnu99 -lm
+./l2vecnorm 2
+
 
