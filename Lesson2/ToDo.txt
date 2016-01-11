@@ -1,3 +1,8 @@
 - Database will be SQLite3 via Python
 - way in future: more error checking on command line parameters
+- way in future: more error checking inside c/python code
 - l2vecnorm: check for non-positive vector size
+- do Fortan versions of C numercical routines
+- experiment what happens when C numerical code explodes (e.g. n too large)
+
+
