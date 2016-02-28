@@ -1,0 +1,6 @@
+git pull
+
+git add -A .
+git commit -m "Final revision before sending out Lesson 1"
+git push origin master
+
