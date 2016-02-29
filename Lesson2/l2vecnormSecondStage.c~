@@ -18,13 +18,14 @@ int main( int argc, char *argv[]) {
         u[i] = i;
     }
 
+    /*
     // for testing: display vector (array) contents
     for (int i = 0; i < n; ++i) {
         printf("%f  ", u[i]);
     }
     printf("\n");
+    */
 
- /* 2nd stage code
     // compute l2-norm of vector (array)
     double accum = 0.;
     for (int i = 0; i < n; ++i) {
@@ -34,7 +35,6 @@ int main( int argc, char *argv[]) {
 
     // output l2-norm
     printf("%f\n", norm);
-*/
 
 }
 
