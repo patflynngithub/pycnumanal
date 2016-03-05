@@ -24,7 +24,7 @@ int main( int argc, char *argv[]) {
     }
     printf("\n");
 
- /* 2nd stage code
+// /* 2nd stage code
     // compute l2-norm of vector (array)
     double accum = 0.;
     for (int i = 0; i < n; ++i) {
@@ -34,7 +34,7 @@ int main( int argc, char *argv[]) {
 
     // output l2-norm
     printf("%f\n", norm);
-*/
+// */
 
 }
 
