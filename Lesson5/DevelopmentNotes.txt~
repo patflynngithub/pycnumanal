@@ -1,0 +1,2 @@
+- due to using gcc clock() function, timings are in cpu clock ticks (not seconds or minutes)
+

@@ -33,5 +33,6 @@ int main( int argc, char *argv[]) {
 
     // printf("%ld\n", cpu_ticks);
     printf("%f\n", cpu_time_used);
+
 }
 

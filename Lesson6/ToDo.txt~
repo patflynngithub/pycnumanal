@@ -1,3 +1,3 @@
 - Database will be SQLite3 via Python
-- way in future: more error checking on parameters
+- way in future: more error checking on command line parameters
 - l2vecnorm: check for non-positive vector size

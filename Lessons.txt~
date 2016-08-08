@@ -80,10 +80,10 @@ http://www.gnu.org/software/libc/manual/html_node/CPU-Time.html
 
 python main.py
 
-Lesson 4
+Lesson 5
 --------
 
 https://docs.python.org/2/library/sqlite3.html
 http://sebastianraschka.com/Articles/sqlite3_database.html
 http://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html
-https://pymotw.com/2/sqlite3/
+* https://pymotw.com/2/sqlite3/
