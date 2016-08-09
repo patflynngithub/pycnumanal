@@ -1,0 +1,6 @@
+
+- this project combining the use of python and c is being done to give a colleague of mine a crash course in these lanugages.
+
+- using the following way to call the c code (program) because it is the easiest for the pupil
+
+     retvalue = os.popen("./l2vecnorm 4").readlines()

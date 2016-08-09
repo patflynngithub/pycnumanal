@@ -1,0 +1,14 @@
+create table algorithm (
+    name         text primary key,
+    description  text,
+    command_line text
+);
+
+-- Stores the timing for each run of the algorithms above
+create table timings (
+    id           integer primary key autoincrement not null,
+    problem_size integer,
+    time         real,
+    algorithm    text not null references algorithm(name)
+);
+
