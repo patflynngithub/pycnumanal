@@ -4,7 +4,8 @@ import os
 
 print os.getcwd()
 
-retvalue = os.popen("./l2vecnorm 40000").readlines()
+external_command = "./l2vecnorm 40000"
+ret_value = os.popen(external_command).readlines()
 
-print retvalue
+print ret_value
 
