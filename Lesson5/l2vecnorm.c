@@ -17,6 +17,14 @@ int main( int argc, char *argv[]) {
         u[i] = i;
     }
 
+    /*
+    // for testing: display vector (array) contents
+    for (int i = 0; i < n; ++i) {
+        printf("%f  ", u[i]);
+    }
+    printf("\n");
+    */
+
     clock_t start_ticks = clock(); // cpu clock ticks
 
     // compute l2-norm of vector (array)
@@ -25,6 +33,11 @@ int main( int argc, char *argv[]) {
         accum += u[i] * u[i];
     }
     double norm = sqrt(accum);
+
+    /*
+    // for testing: output l2-norm
+    printf("%f\n", norm);
+    */
 
     clock_t end_ticks = clock();
 

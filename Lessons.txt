@@ -73,16 +73,14 @@ Lesson 2
 gcc -o l2vecnorm l2vecnorm.c -std=gnu99 -lm
 ./l2vecnorm 2
 
-Lesson 4
+Lesson 5
 --------
 
 http://www.gnu.org/software/libc/manual/html_node/CPU-Time.html
 
 python main.py
 
-Lesson 4
-
-Lesson 5
+Lesson 6
 --------
 
 https://docs.python.org/2/library/sqlite3.html
