@@ -4,7 +4,7 @@ create table algorithm (
     command_line text
 );
 
--- Stores the timing for each run of the algorithms above
+-- Stores the timing for the run of one of the above algorithms
 create table timings (
     id           integer primary key autoincrement not null,
     problem_size integer,
