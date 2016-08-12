@@ -20,19 +20,35 @@ with sqlite3.connect(db_filename) as conn:
     else:
         print 'Database exists, assume schema does, too.'
 
+    c = conn.cursor()
+
+    name = 'l2 vector norm'
+    description = 'l2 vector norm in C'
+    command = 'l2vecnorm'
+
+    problem_size = 40000
 
     retvalue = os.popen("./l2vecnorm 40000").readlines()
     timing = float(retvalue[0].strip())
 
-    conn.execute("""
-            insert into algorithm (name, description, command_line)
-            values ('l2 vector norm', 'l2 vector norm in C', 'l2vecnorm')
-            """)
+# c.execute("INSERT OR IGNORE INTO {tn} ({idf}, {cn}) VALUES (123456, 'test')".\
+#        format(tn=table_name, idf=id_column, cn=column_name))
 
-    conn.execute("""
-            insert into timings (problem_size, time, algorithm)
-            values (40000, 0.000451, 'l2 vector norm' )
-            """)
+    c.execute("INSERT OR IGNORE INTO algorithms (name, description, command_line) VALUES (?, ?, ?)",
+              (name, description, command) )
+
+    c.execute("INSERT OR IGNORE INTO timings (problem_size, time, algorithm) VALUES (?, ?, ?)",
+              (problem_size, timing, name) )
+
+#    conn.execute("""
+#            insert into algorithms (name, description, command_line)
+#            values ('l2 vector norm', 'l2 vector norm in C', 'l2vecnorm')
+#            """)
+
+#    conn.execute("""
+#            insert into timings (problem_size, time, algorithm)
+#            values (40000, 0.000451, 'l2 vector norm' )
+#            """)
 
     conn.commit()
 
