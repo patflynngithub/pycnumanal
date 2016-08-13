@@ -25,7 +25,7 @@ with sqlite3.connect(db_filename) as conn:
     name         = 'l2 vector norm'
     description  = 'l2 vector norm in C'
     command      = 'l2vecnorm'
-    problem_size = 100000
+    problem_size = 1000000
 
     command_line = "./" + command + " " + str(problem_size)
 
