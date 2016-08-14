@@ -26,9 +26,9 @@ with sqlite3.connect(db_filename) as conn:
     description  = 'l2 vector norm in C'
     command      = 'l2vecnorm'
     problem_size = 1000000
-
     command_line = "./" + command + " " + str(problem_size)
 
+    # call the C program
     retvalue = os.popen(command_line).readlines()
     timing = float(retvalue[0].strip())
 
