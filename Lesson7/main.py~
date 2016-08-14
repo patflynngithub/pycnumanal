@@ -17,7 +17,6 @@ with sqlite3.connect(db_filename) as conn:
         with open(schema_filename, 'rt') as f:
             schema = f.read()
         conn.executescript(schema)
-
     else:
         print 'Database exists, assume schema does, too.'
 

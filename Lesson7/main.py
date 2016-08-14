@@ -20,14 +20,15 @@ with sqlite3.connect(db_filename) as conn:
     else:
         print 'Database exists, assume schema does, too.'
 
-    # setup for running C program to get timing
+    # setup for running external program (e.g., C program) to get timing
     name         = 'l2 vector norm'
     description  = 'l2 vector norm in C'
     command      = 'l2vecnorm'
     problem_size = 1000000
     command_line = "./" + command + " " + str(problem_size)
 
-    # call the C program
+    # call the external program; it is assumed that the external program
+    # outputs only the timing in the first line of console output
     retvalue = os.popen(command_line).readlines()
     timing = float(retvalue[0].strip())
 
