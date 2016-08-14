@@ -1,4 +1,4 @@
-# main driver program in Python
+# Runs C algorithm for a problem size and stores timing in the database
 
 import os
 import sqlite3
