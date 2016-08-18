@@ -2,14 +2,17 @@
 #
 #    - displays algorithms in the database
 #    - stores algorithms in the database: names, descriptions, external program name
-#    - displays an algorithm's timings in the database
-#    - generates/stores a timing for an algorithm; calls the associated external program with an inputted problem size
-#                                                  (timing outputed to console by the external program);
-#    - plots stored timings for algorithms (one plot can have multiple algorithms included)
+#    - displays an algorithm's timings for different problem sizes in the database
+#    - generates/stores algorithm timings for different problem sizes; 
+#      (calls the associated external program with a user-specified problem size;)
+#      (timing assumed outputted to console by the external program)
+#    - plots the stored timings for algorithms (one plot can have multiple algorithms included)
 #
 
+import sys
 import os
 import sqlite3
+import matplotlib.pyplot as plt
 
 # -----------------------------------------------------------------
 
@@ -57,12 +60,12 @@ def display_algorithms(algs) :
     print
     print "\t\tAlgorithms in database"
     print
-    print "\tName\t\t\tDescription"
-    print "\t----\t\t\t-----------"
+    print "\tName\t\tDescription\t\tProgram"
+    print "\t----\t\t-----------\t\t-------"
 
     k = 1
     for alg_info in algs :
-        print str(k) + ") " + alg_info[0] + "\t\t" + alg_info[1]
+        print "{:<2d}) {:<20s} {:<30s} {:<20s}".format(k, alg_info[0], alg_info[1], alg_info[2])
         k = k + 1
 
     print
@@ -74,6 +77,7 @@ def display_algorithms(algs) :
 def add_algorithm(conn) :   
     """ Add a new algorithm to the database """
 
+    # for clarity, display algorithms already in database
     algs = get_algorithms(conn)
     display_algorithms(algs)
 
@@ -129,16 +133,21 @@ def display_timings(alg_name, timings) :
 # -----------------------------------------------------------------
 
 def add_timing(conn) :   
-    """ Add a new timing for an algorithm """
+    """ Add a new timing for an algorithm in the database """
 
+    # display available algorithms
     algs = get_algorithms( conn )
     display_algorithms( algs )
 
-    alg_num = int( raw_input("Enter algorithm # to add a timing for (0 to exit) : "))
+    # choose the algorithm
+    alg_num = int( raw_input("Enter algorithm # to add a timing for (0 to return to menu) : "))
     if alg_num == 0 : return
 
     alg_info = algs[alg_num-1]
     alg_name = alg_info[0]
+    program  = alg_info[2] 
+
+    # for clarity, display the algorithm's timings already in the database
     timings  = get_timings(conn, alg_name)
     display_timings(alg_name, timings)
     
@@ -147,7 +156,6 @@ def add_timing(conn) :
     prob_size = int( raw_input("New problem size (positive integer) : ") )
 
     # prepare OS command-line style command
-    program = alg_info[2] 
     command_line = "./" + program + " " + str(prob_size)
 
     # call the external program; it is assumed that the external program
@@ -168,59 +176,129 @@ def add_timing(conn) :
 
 # -----------------------------------------------------------------
 
+def plot_timings(conn) :   
+    """ Plot timings for an algorithm in the database """
+
+    # display available algorithms
+    algs = get_algorithms(conn)
+    if len(algs) == 0 :
+        print "\nNo algorithms in database\n" 
+        return
+    display_algorithms(algs)
+
+    # choose the algorithms
+    alg_nums = []
+    while 1 :
+        alg_num = int( raw_input("Enter algorithm # to plot timings for (0 to return to menu) : ") )
+        if alg_num == 0 : break
+        alg_nums.append(alg_num)
+
+    cur = conn.cursor()  # database table cursor
+
+    fig = plt.figure()
+    fig.canvas.set_window_title('Timing vs Problem size') 
+
+    alg_names = []
+
+    for alg_num in alg_nums :
+
+        # get chosen algorithm info
+        alg_info = algs[alg_num-1]
+        alg_name = alg_info[0]
+ 
+        # extract desired timings from timings table
+        cur.execute("SELECT problem_size, time FROM timings " +
+                    "INNER JOIN algorithms ON algorithms.name = timings.algorithm WHERE algorithms.name = ? " + 
+                    "ORDER BY problem_size ASC", (alg_name,))
+        timings = cur.fetchall() 
+        if len(timings) == 0 :
+            print "\nNo timings in database for " + alg_name + "algorithm\n" 
+            continue
+
+        alg_names.append(alg_name)
+
+        # organize timings info for plotting
+        sizes   = [timing[0] for timing in timings]
+        timings = [timing[1] for timing in timings]
+
+        # plot the timings
+        plt.plot(sizes, timings)
+ 
+    plt.xlabel('problem size')
+    plt.ylabel('seconds')
+    plt.title("Timing vs Problem Size")
+    plt.legend(alg_names)
+    plt.show()
+
+# end function: plot_timings
+
+# -----------------------------------------------------------------
+
 # ===============================================================================================
 #
 #  Execution starts here
 #
 
+db_filename     = 'timings.db'  # database of all algorithms and their timings
+schema_filename = 'schema.sql'  # structure of the algorithms/timings tables in the database
+
+# does database file exist in current working directory?
 print
 print os.getcwd()
-
-db_filename     = 'timings.db'
-schema_filename = 'schema.sql'
-
-# does database file exist?
 db_is_new = not os.path.exists(db_filename)
 
-with sqlite3.connect(db_filename) as conn:
-    if db_is_new:  # create the database file
+with sqlite3.connect(db_filename) as conn:  # database created if it doesn't exist yet
+
+    if db_is_new :  # create the tables in the database
         print 'Creating schema'
         with open(schema_filename, 'rt') as f:
             schema = f.read()
         conn.executescript(schema)
-    else:
-        print 'Database exists, assume schema does, too.'
 
+    else :  # database file already exists
+        print 'Database exists, assuming schema does, too.'
+
+    # the text menu loop
     while 1 :
 
-        selection = top_menu()
+        selection = top_menu()   # select action from the menu
 
-        if   selection == "0" :
-            print "0"
+        if   selection == "0" :  # exit program
+            print
             exit()
 
         elif selection == "1" :  # display algorithms
-            display_algorithms( get_algorithms(conn) )
+            algs = get_algorithms(conn)
+            if len(algs) == 0 :
+                print "\nNo algorithms in database"
+                continue
+            display_algorithms(algs)
 
         elif selection == "2" :  # add an algorithm
             add_algorithm(conn)
 
         elif selection == "3" :  # display an algorithm's timings
             algs = get_algorithms( conn )
+            if len(algs) == 0 :
+                print "\nNo algorithms in database"
+                continue
             display_algorithms( algs )
             alg_num = int( raw_input("Enter algorithm # (0 to exit) : "))
+            if alg_num == 0 : continue
             alg_name = algs[alg_num-1][0]
-            timings = get_timings(conn, alg_name)
+            timings  = get_timings(conn, alg_name)
+            if len(timings) == 0 :
+                print "\nNo timings in database for " + alg_name + " \n"
+                continue
             display_timings(alg_name,timings)
 
-        elif selection == "4" :  # add timings to an algorithm
+        elif selection == "4" :  # add a timing for an algorithm
             add_timing(conn)
 
-        elif selection == "5" :  # plot timings
-            print "5"
+        elif selection == "5" :  # plot timings for one more algorithms
+            plot_timings(conn)
 
-        else :
-            print("Input error")
-            exit()
+        else :                   # unexpected menu input
+            print("\nInput error\n")
 
 
