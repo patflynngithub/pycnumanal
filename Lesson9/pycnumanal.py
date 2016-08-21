@@ -129,7 +129,7 @@ def display_timings(alg_name, timings) :
 # -----------------------------------------------------------------
 
 def do_display_algorithms(conn) :   
-    """ Display all the algorithms in the database """
+    """ Do process of displaying all the algorithms in the database """
 
     # get all algorithms from database
     algs = get_algorithms(conn)
@@ -171,6 +171,7 @@ def add_algorithm(conn) :
 # -----------------------------------------------------------------
 
 def do_display_timings(conn) :
+    """ Do process of displaying all of an algorithm's timings """
 
     # get all algorithms from database
     algs = get_algorithms( conn )
@@ -271,9 +272,9 @@ def plot_timings(conn) :
     fig = plt.figure()
     fig.canvas.set_window_title('Timing vs Problem size') 
 
-    alg_names = []
     # plot each algorithm's timings by looping through
     # the chosen algorithms
+    alg_names = []
     for alg_num in alg_nums :
 
         # get current algorithm's info
@@ -301,7 +302,7 @@ def plot_timings(conn) :
         # plot the current algorithm's timings
         plt.plot(sizes, timings)
 
-    # add plotting embellishments 
+    # add overall plotting embellishments 
     plt.xlabel('problem size')
     plt.ylabel('seconds')
     plt.title("Timing vs Problem Size")
