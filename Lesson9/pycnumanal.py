@@ -94,6 +94,40 @@ def display_algorithms(algs) :
 
 # -----------------------------------------------------------------
 
+def get_timings(conn, alg_name) :
+    """ Get an algorithm's timings from the database """
+    
+    cur = conn.cursor()  # database table cursor
+
+    # get an algorithm's timings from the database
+    cur.execute("SELECT problem_size, time FROM timings WHERE algorithm = ? ORDER BY problem_size ASC",
+                (alg_name,) )
+    timings = cur.fetchall()
+
+    return timings
+
+# end function: get_timings
+
+# -----------------------------------------------------------------
+
+def display_timings(alg_name, timings) :   
+    """ Display all of an algorithm's timings in the database """
+
+    print
+    print "     \"" + alg_name + "\" timings in database"
+    print
+    print "  Problem size        Time"
+    print "  ------------   ---------------"
+
+    for timing_info in timings :
+        print "  {:>12d}   {:>15.6f}".format(timing_info[0], timing_info[1])
+
+    print        
+
+# end function: display_timings
+
+# -----------------------------------------------------------------
+
 def do_display_algorithms(conn) :   
     """ Display all the algorithms in the database """
 
@@ -150,7 +184,7 @@ def do_display_timings(conn) :
     display_algorithms( algs )
 
     # choose the algorithm to display timings for
-    alg_num = int( raw_input("Enter algorithm # (0 to exit) : "))
+    alg_num = int( raw_input("Enter algorithm # (0 to return to menu) : "))
     if alg_num == 0 : return
 
     # get the chosen algorithm's timings
@@ -166,40 +200,6 @@ def do_display_timings(conn) :
     display_timings(alg_name,timings)
 
 # end function: do_display_timings
-
-# -----------------------------------------------------------------
-
-def get_timings(conn, alg_name) :
-    """ Get an algorithm's timings from the database """
-    
-    cur = conn.cursor()  # database table cursor
-
-    # get an algorithm's timings from the database
-    cur.execute("SELECT problem_size, time FROM timings WHERE algorithm = ? ORDER BY problem_size ASC",
-                (alg_name,) )
-    timings = cur.fetchall()
-
-    return timings
-
-# end function: get_timings
-
-# -----------------------------------------------------------------
-
-def display_timings(alg_name, timings) :   
-    """ Display all of an algorithm's timings in the database """
-
-    print
-    print "     \"" + alg_name + "\" timings in database"
-    print
-    print "  Problem size        Time"
-    print "  ------------   ---------------"
-
-    for timing_info in timings :
-        print "  {:>12d}   {:>15.6f}".format(timing_info[0], timing_info[1])
-
-    print        
-
-# end function: display_timings
 
 # -----------------------------------------------------------------
 
@@ -276,7 +276,7 @@ def plot_timings(conn) :
     # the chosen algorithms
     for alg_num in alg_nums :
 
-        # get current algorithm info
+        # get current algorithm's info
         alg_info = algs[alg_num-1]
         alg_name = alg_info[0]
  
@@ -285,11 +285,13 @@ def plot_timings(conn) :
                     "INNER JOIN algorithms ON algorithms.name = timings.algorithm WHERE algorithms.name = ? " + 
                     "ORDER BY problem_size ASC", (alg_name,))
         timings = cur.fetchall() 
+
+        # check if current algorithm has any timings
         if len(timings) == 0 :  # no timings were found for current algorithm
             print "\nNo timings in database for " + alg_name + "algorithm\n" 
             continue
 
-        # add algorithm name to the list of chosen algorithms that timings were found for
+        # add current algorithm's name to the list of chosen algorithms that timings were found for
         alg_names.append(alg_name)
 
         # organize current algorithm's timings info for plotting
@@ -363,4 +365,5 @@ with sqlite3.connect(db_filename) as conn:  # database created if it doesn't exi
         else :                   # unexpected menu input
             print("\nInput error\n")
 
+# end program
 
