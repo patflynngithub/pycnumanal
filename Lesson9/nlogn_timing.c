@@ -1,5 +1,11 @@
 /* Gives O(nlogn) timing */
 
+/*
+   - used gcc compiler
+
+         gcc -o nlogn_timing nlogn_timing.c -std=gnu99 -lm
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>

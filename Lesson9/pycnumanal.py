@@ -19,7 +19,6 @@
 #    08/20/2016    Version 1.0: (pf)
 #                    - runs on Linux (not tested on Windows)
 #                    - Python 2.7.x (not tested with Python 3)
-#                    - used gcc compiler
 #                    - text-based interface
 #                    - SQlite (sqlite3) database used for storage
 #                    - very little error checking
@@ -367,4 +366,6 @@ with sqlite3.connect(db_filename) as conn:  # database created if it doesn't exi
             print("\nInput error\n")
 
 # end program
+
+# ===============================================================================================
 

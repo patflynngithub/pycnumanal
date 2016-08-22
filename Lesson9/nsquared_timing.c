@@ -1,5 +1,11 @@
 /* Gives O(n^2) timing */
 
+/*
+   - used gcc compiler
+
+         gcc -o nsquared_timing nsquared_timing.c -std=gnu99 -lm
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>

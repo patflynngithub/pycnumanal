@@ -3,7 +3,6 @@
 /*
    - used gcc compiler
 
-         gcc -o l2vecnorm l2vecnorm.c -std=gnu99 -lm
 */
 
 #include <stdio.h>

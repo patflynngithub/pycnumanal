@@ -1,5 +1,11 @@
 /* Gives O(n) (linear) timing */
 
+/*
+   - used gcc compiler
+
+         gcc -o linear_timing linear_timing.c -std=gnu99 -lm
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
