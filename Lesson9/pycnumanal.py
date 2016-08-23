@@ -208,6 +208,12 @@ def add_timing(conn) :
 
     # display available algorithms
     algs = get_algorithms( conn )
+
+    # check to see if any algorithms were found
+    if len(algs) == 0 :
+        print "\nNo algorithms in database"
+        return
+
     display_algorithms( algs )
 
     # choose the algorithm
@@ -288,8 +294,8 @@ def plot_timings(conn) :
 
         # check if current algorithm has any timings
         if len(timings) == 0 :  # no timings were found for current algorithm
-            print "\nNo timings in database for " + alg_name + "algorithm\n" 
-            continue
+            print "\nNo timings in database for " + alg_name + " algorithm\n" 
+            return
 
         # add current algorithm's name to the list of chosen algorithms that timings were found for
         alg_names.append(alg_name)
