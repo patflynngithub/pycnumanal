@@ -44,6 +44,6 @@ with sqlite3.connect(db_filename) as conn:
     plt.plot(sizes, timings)
     plt.xlabel('problem size')
     plt.ylabel('seconds')
-    plt.title("Timings for " + description)
+    plt.title("Timings for " + alg_name)
     plt.show()
 

@@ -18,7 +18,7 @@ if not db_exists:
 with sqlite3.connect(db_filename) as conn:
 
     # setup for querying timings database for desired timings
-    alg_name         = 'l2 vector norm'
+    alg_name     = 'l2 vector norm'
     description  = 'l2 vector norm in C'
     command      = 'l2vecnorm'
     cur = conn.cursor()  # database table cursor
