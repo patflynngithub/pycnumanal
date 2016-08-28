@@ -1,3 +1,7 @@
+- add delete database entry actions (for algorithms and timings)
+
+- add capability to enter generate multiple timings from one entry for an algorithm
+
 - more error checking on command line parameters
 - more error checking inside c/python code
 - experiment what happens when C numerical code explodes (e.g. n too large or too small)
