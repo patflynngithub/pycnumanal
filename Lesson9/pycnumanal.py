@@ -52,6 +52,7 @@ def top_menu() :
         if selection in ("0", "1", "2", "3", "4", "5") :
             return selection
         else : 
+            print("BAD ENTRY!")
             continue
 
 # end function: top_menu
@@ -206,7 +207,7 @@ def do_display_timings(conn) :
 def add_timing(conn) :   
     """ Add a new timing for an algorithm in the database """
 
-    # display available algorithms
+    # get available algorithms
     algs = get_algorithms( conn )
 
     # check to see if any algorithms were found
@@ -344,10 +345,10 @@ with sqlite3.connect(db_filename) as conn:  # database created if it doesn't exi
     else :  # database file already exists
         print 'Database exists, assuming schema does, too.'
 
-    # the text top menu loop
+    # the top menu loop
     while 1 :
 
-        selection = top_menu()   # select action from the menu
+        selection = top_menu()   # selected action from the menu
 
         if   selection == "0" :  # exit program
             print

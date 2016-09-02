@@ -52,6 +52,7 @@ def top_menu() :
         if selection in ("0", "1", "2", "3", "4", "5") :
             return selection
         else : 
+            print("BAD ENTRY!")
             continue
 
 # end function: top_menu
@@ -295,7 +296,7 @@ def plot_timings(conn) :
         # check if current algorithm has any timings
         if len(timings) == 0 :  # no timings were found for current algorithm
             print "\nNo timings in database for " + alg_name + " algorithm\n" 
-            continue
+            return
 
         # add current algorithm's name to the list of chosen algorithms that timings were found for
         alg_names.append(alg_name)
@@ -344,10 +345,10 @@ with sqlite3.connect(db_filename) as conn:  # database created if it doesn't exi
     else :  # database file already exists
         print 'Database exists, assuming schema does, too.'
 
-    # the text top menu loop
+    # the top menu loop
     while 1 :
 
-        selection = top_menu()   # select action from the menu
+        selection = top_menu()   # selected action from the menu
 
         if   selection == "0" :  # exit program
             print
