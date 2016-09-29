@@ -243,12 +243,14 @@ def add_timing(conn) :
     timing   = float(retvalue[0].strip())
     print "Timing: ", timing
 
-    cur = conn.cursor()  # database table cursor
+    # get database table cursor
+    cur = conn.cursor()  
 
     # insert the new timing into the timings table
     cur.execute("INSERT INTO timings (problem_size, time, algorithm) VALUES (?, ?, ?)",
                 (prob_size, timing, alg_name) )
 
+    # finalize the database data addition
     conn.commit()
 
 # end function: add_timing
