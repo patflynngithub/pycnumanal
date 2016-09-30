@@ -368,7 +368,7 @@ with sqlite3.connect(db_filename) as conn:  # database created if it doesn't exi
         elif selection == "4" :  # add a timing for an algorithm
             add_timing(conn)
 
-        elif selection == "5" :  # plot timings for one more algorithms
+        elif selection == "5" :  # plot timings for one or more algorithms
             plot_timings(conn)
 
         else :                   # unexpected menu input
