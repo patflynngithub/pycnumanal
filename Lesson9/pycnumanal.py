@@ -23,6 +23,8 @@
 #                    - SQlite (sqlite3) database used for storage
 #                    - very little error checking
 #
+#    01/04/2017    - improved function documentation (In/Out for each function)
+#
 # (pf) Patrick Flynn
 # (dh) Dan Hallman (done nothing at all)
 #
@@ -36,7 +38,11 @@ import matplotlib.pyplot as plt
 # -----------------------------------------------------------------
 
 def top_menu() :   
-    """ Top menu of the pycnumanal application """
+    """ Top menu of the pycnumanal application
+
+        In:  nothing 
+        Out: menu selection (string)
+    """
 
     while 1 :
         print("")
@@ -60,7 +66,11 @@ def top_menu() :
 # -----------------------------------------------------------------
 
 def get_algorithms(conn) :
-    """ Get all the algorithms from the database """
+    """ Get all the algorithms from the database
+
+        In:  conn - algorithms/timings database connection
+        Out: algs - all algorithms in database (list of tuples)
+    """
 
     cur = conn.cursor()  # database table cursor
 
@@ -75,7 +85,11 @@ def get_algorithms(conn) :
 # -----------------------------------------------------------------
 
 def display_algorithms(algs) :   
-    """ Display all the algorithms in the database """
+    """ Display all the algorithms in the database
+
+        In:  algs - all algorithms in database (list of tuples)
+        Out: nothing
+    """
 
     print
     print "\t\tAlgorithms in database"
@@ -95,7 +109,12 @@ def display_algorithms(algs) :
 # -----------------------------------------------------------------
 
 def get_timings(conn, alg_name) :
-    """ Get an algorithm's timings from the database """
+    """ Get an algorithm's timings from the database
+
+        In:  conn     - algorithms/timings database connection
+             alg_name - name of algorithm getting timings for (string)
+        Out: timings  - all timings for the given algorithm (list of tuples)
+    """
     
     cur = conn.cursor()  # database table cursor
 
@@ -111,7 +130,12 @@ def get_timings(conn, alg_name) :
 # -----------------------------------------------------------------
 
 def display_timings(alg_name, timings) :   
-    """ Display all of an algorithm's timings in the database """
+    """ Display all of an algorithm's timings in the database
+
+        In:  alg_name - name of algorithm displaying timings for (string)
+             timings  - all timings for the given algorithm (list of tuples)
+        Out: nothing
+    """
 
     print
     print "     \"" + alg_name + "\" timings in database"
@@ -129,7 +153,11 @@ def display_timings(alg_name, timings) :
 # -----------------------------------------------------------------
 
 def do_display_algorithms(conn) :   
-    """ Do process of displaying all the algorithms in the database """
+    """ Higher level process of displaying all the algorithms in the database
+
+        In:  conn - algorithms/timings database connection
+        Out: nothing
+    """
 
     # get all algorithms from database
     algs = get_algorithms(conn)
@@ -147,7 +175,11 @@ def do_display_algorithms(conn) :
 # -----------------------------------------------------------------
 
 def add_algorithm(conn) :   
-    """ Add a new algorithm to the database """
+    """ Add a new algorithm to the database
+
+        In:  conn - algorithms/timings database connection
+        Out: nothing
+    """
 
     # display algorithms already in database
     algs = get_algorithms(conn)
@@ -164,6 +196,7 @@ def add_algorithm(conn) :
     cur.execute("INSERT INTO algorithms (name, description, program) VALUES (?, ?, ?)",
                 (alg_name, alg_desc, alg_prog) )
 
+    # finalize the database data addition
     conn.commit()
 
 # end function: add_algorithm
@@ -171,7 +204,11 @@ def add_algorithm(conn) :
 # -----------------------------------------------------------------
 
 def do_display_timings(conn) :
-    """ Do process of displaying all of an algorithm's timings """
+    """ Higher level process of displaying all of an algorithm's timings
+
+        In:  conn - algorithms/timings database connection
+        Out: nothing
+    """
 
     # get all algorithms from database
     algs = get_algorithms( conn )
@@ -205,7 +242,11 @@ def do_display_timings(conn) :
 # -----------------------------------------------------------------
 
 def add_timing(conn) :   
-    """ Add a new timing for an algorithm in the database """
+    """ Add a new timing for an algorithm in the database
+
+        In:  conn - algorithms/timings database connection
+        Out: nothing
+    """
 
     # get available algorithms
     algs = get_algorithms( conn )
@@ -217,7 +258,7 @@ def add_timing(conn) :
 
     display_algorithms( algs )
 
-    # choose the algorithm
+    # choose the algorithm to add timing for
     alg_num = int( raw_input("Enter algorithm # to add a timing for (0 to return to menu) : "))
     if alg_num == 0 : return
 
@@ -258,7 +299,11 @@ def add_timing(conn) :
 # -----------------------------------------------------------------
 
 def plot_timings(conn) :   
-    """ Plot timings for an algorithm in the database """
+    """ Plot timings for an algorithm in the database
+
+        In:  conn - algorithms/timings database connection
+        Out: nothing
+    """
 
     # display available algorithms
     algs = get_algorithms(conn)
