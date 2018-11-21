@@ -1,8 +1,8 @@
-# single line comment
+# Python single line comment
 # main driver program in Python
-# will call l2vecnorm.c
+# will eventual call the l2vecnorm C program to get execution timing
 
-""" This is an example of a multiline
+""" This is an example of a Python multiline
 comment that spans multiple lines
 """
 

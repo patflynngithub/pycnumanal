@@ -1,90 +1,29 @@
 
-Initial setup
+Initial setup (only mentioned here)
 -------------
 
-- Backup hard drive
-- install Ubuntu
+- Backup hard drive (e.g., with Clonezilla)
+- install Ubuntu on dual boot partition
 
-Lesson 1
+Lesson 1 - Getting Project Started on Github and locally
 -------
 
-- Setup account on Github
-- Setup program repository on github 
+- setup account on Github
+- setup program repository on github
+- setup git locally
+- create initial development files locally
+- do first git commit to Github
 
-- install git on Linux
-
-sudo apt-get update
-sudo apt-get install git
-
-mkdir dev
-cd dev
-
-git config --global user.name "Patrick Flynn"
-git config --global user.email "patflynn@hotmail.com"
-
-git config --global credential.helper cache
-git config --global credential.helper 'cache --timeout=3600'
-git config --list
-
-gedit -help
-gedit -V
-git config --global core.editor "gedit -w -s"
-
-git help
-
-ls -al
-git clone https://github.com/patflynngithub/pycnumanal
-ls -al
-
-cd pycnumanal
-ls -al
-
-gedit main.py &
-gedit l2vecnorm2.c
-
-ls -al
-git status
-
-git add *.c
-git add *.py
-
-git status
-
-gedit main.py &
-git status
-
-git add main.py
-git status
-
-git commit
-git commit -m "First commit"
-
-git log
-
-git remote
-git remote -v
-
-git push origin master
-git status
 
 Lesson 2
 --------
 
-gcc -o l2vecnorm l2vecnorm.c -std=gnu99 -lm
-./l2vecnorm 2
 
 Lesson 5
 --------
 
-http://www.gnu.org/software/libc/manual/html_node/CPU-Time.html
-
-python main.py
 
 Lesson 6
 --------
 
-https://docs.python.org/2/library/sqlite3.html
-http://sebastianraschka.com/Articles/sqlite3_database.html
-http://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html
-http://sebastianraschka.com/Articles/2014_sqlite_in_python_tutorial.html
-* https://pymotw.com/2/sqlite3/
+
