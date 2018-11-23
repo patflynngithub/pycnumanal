@@ -1,23 +1,17 @@
+                           Lesson Descriptions
+                           ===================
 
-Initial setup (only mentioned here)
--------------
-
-- Backup hard drive (e.g., with Clonezilla)
-- install Ubuntu on dual boot partition
-
-Lesson 1 - Getting Project Started on Github and locally
+Lesson 1 - Create project on Github and locally
 -------
 
-- setup account on Github
-- setup program repository on github
-- setup git locally
-- create initial development files locally
-- do first git commit to Github
-
-
-Lesson 2
+Lesson 2 - Create your first C program
 --------
 
+Lesson 3 - Compiler Basics with gcc
+--------
+
+Lesson 4 - Understanding some basic C code
+--------
 
 Lesson 5
 --------

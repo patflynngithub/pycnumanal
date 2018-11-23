@@ -1,15 +1,9 @@
 
-Initial setup
--------------
-
-- Backup hard drive
-- install Ubuntu
-
 Lesson 1
--------
+--------
 
 - Setup account on Github
-- Setup program repository on github 
+- Setup program repository on Github 
 
 - install git on Linux
 
