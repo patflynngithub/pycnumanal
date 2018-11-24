@@ -13,9 +13,8 @@ Lesson 3 - Compiler Basics with gcc
 Lesson 4 - Understanding some basic C code
 --------
 
-Lesson 5
+Lesson 5 - Timing in C, getting started with Python, and interfacing Python with C
 --------
-
 
 Lesson 6
 --------
