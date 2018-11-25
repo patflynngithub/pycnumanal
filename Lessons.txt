@@ -16,7 +16,13 @@ Lesson 4 - Understanding some basic C code
 Lesson 5 - Timing in C, getting started with Python, and interfacing Python with C
 --------
 
-Lesson 6
+Lesson 6 - SQL and SQLite
+--------
+
+Lesson 7 - Python interaction with SQLite
+--------
+
+Lesson 8 - Plotting the timings in Python: matplotlib.pylab
 --------
 
 

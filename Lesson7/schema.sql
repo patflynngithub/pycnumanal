@@ -1,14 +1,15 @@
-create table algorithms (
-    name         text primary key,
-    description  text,
-    command_line text
+-- Master table of programs
+create table programs (
+    program_name  text primary key,
+    description   text,
+    cmd_line_name text
 );
 
--- Stores the timings for the above algorithms
+-- Stores the timings for the above programs
 create table timings (
     id           integer primary key autoincrement not null,
     problem_size integer,
-    time         real,
-    algorithm    text not null references algorithms(name)
+    timing       real,
+    program_name text not null references programs(program_name)
 );
 
