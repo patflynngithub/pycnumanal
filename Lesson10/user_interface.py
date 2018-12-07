@@ -18,16 +18,19 @@
 # Change log:
 #
 #    12/06/2018 (pf)   Version 0.11:
+#                      - created this module as part of this version's
+#                        "separating the concerns" of central, database,
+#                        and user_interface operations
 #                      - implemented adding/displaying programs in the database
 #
 # (pf) Patrick Flynn
 #
 # ---------------------------------------------------------
 
-def top_menu(conn) :
+def top_menu(config) :
     """ Top text menu of the pycnumanal application
 
-        In:  conn    - programs/timings database connection
+        In:  config  - application's configuration settings
         Out: nothing
     """
 
@@ -40,13 +43,14 @@ def top_menu(conn) :
         selection = input("Enter selection number (0 to exit) : ")
 
         if selection == "0" :    # exit program
+            print()
             return
 
         elif selection == "1" :  # add a program
-            add_program(conn)
+            add_program(config)
 
         elif selection == "2" :  # display programs
-            display_programs(conn)
+            display_programs(config)
 
         else : 
             print("\nBAD ENTRY!")
@@ -55,14 +59,14 @@ def top_menu(conn) :
 
 # -----------------------------------------------------------------
 
-def get_programs(conn) :
+def get_programs(config) :
     """ Get all the programs from the database
 
-        In:  conn  - programs/timings database connection
-        Out: progs - all programs in database (list of tuples)
+        In:  config - application's configuration settings
+        Out: progs  - all programs in database (list of tuples)
     """
 
-    progs = main.get_programs(conn)
+    progs = main.get_programs(config)
 
     return progs
 
@@ -70,17 +74,18 @@ def get_programs(conn) :
 
 # -----------------------------------------------------------------
 
-def display_programs(conn) :   
+def display_programs(config) :   
     """ Displays all the programs in the database
 
-        In:  conn  - programs/timings database connection
-        Out: progs - all programs in database (list of 3-tuples)
+        In:  config - application's configuration settings
+        Out: progs  - all programs in database (list of 3-tuples)
     """
 
     # get all programs from database
-    progs = get_programs(conn)
+    progs = get_programs(config)
 
     print()
+
     # check if any programs were found
     if len(progs) == 0 :
         print("No programs in database")
@@ -104,14 +109,14 @@ def display_programs(conn) :
 
 # -----------------------------------------------------------------
 
-def add_program(conn) :
+def add_program(config) :
     """ Add a new program to the database
 
-        In:  conn    - programs/timings database connection
+        In:  config  - application's configuration settings
         Out: nothing
     """
 
-    display_programs(conn)
+    display_programs(config)
     print()
     
     # user inputs new program info
@@ -119,10 +124,11 @@ def add_program(conn) :
     prog_desc     = input("Description : ")
     cmd_line_name = input("Command line name (e.g. \"l2vecnorm\") : ")
 
-    main.add_program(conn, prog_name, prog_desc, cmd_line_name)
+    main.add_program(config, prog_name, prog_desc, cmd_line_name)
 
 # end function: add_program
 
 # -----------------------------------------------------------------
 
 import pycnumanal as main
+

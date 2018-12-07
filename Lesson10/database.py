@@ -2,6 +2,7 @@
 # 
 #     VERSION 0.11
 #
+#    - creates database if doesn't already exist
 #    - adds programs to the database: names, descriptions, command line names
 #    - displays programs in the database
 #
@@ -15,7 +16,9 @@
 # Change log:
 #
 #    12/07/2018 (pf)   Version 0.11:
-#                      - database.py created
+#                      - created this module as part of this version's
+#                        "separating the concerns" of central, database,
+#                        and user_interface operations
 #                      - checks to see if database file exists
 #                      - creates database/tables, if needed
 #                      - adds programs to database

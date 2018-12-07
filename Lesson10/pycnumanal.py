@@ -22,12 +22,13 @@
 #                      - first version of the pycnumanal program
 #                      - implemented adding/displaying programs in the database
 #
-#    12/06/2018 (pf)   Version 0.11:
-#                      - no new functionality
+#    12/07/2018 (pf)   Version 0.11:
 #                      - reorganized program functionalities into three modules:
 #                           - pycnumanal     ("controller")
 #                           - database       ("model")
 #                           - user_interface ("view")
+#                      - added application settings dictionary (config) that can 
+#                        be passed between the modules
 #
 # (pf) Patrick Flynn
 #
@@ -43,14 +44,14 @@ import user_interface as ui
 
 # -----------------------------------------------------------------
 
-def get_programs(conn) :
+def get_programs(config) :
     """ Get all the programs from the database
 
         In:  conn  - programs/timings database connection
         Out: progs - all programs in database (list of tuples)
     """
 
-    progs = db.get_programs(conn)
+    progs = db.get_programs(config["db_connection"])
 
     return progs
 
@@ -58,14 +59,14 @@ def get_programs(conn) :
 
 # -----------------------------------------------------------------
 
-def add_program(conn, prog_name, prog_desc, cmd_line_name) :   
+def add_program(config, prog_name, prog_desc, cmd_line_name) :   
     """ Add a new program to the database
 
         In:  conn    - programs/timings database connection
         Out: nothing
     """
 
-    db.add_program(conn, prog_name, prog_desc, cmd_line_name)
+    db.add_program(config["db_connection"], prog_name, prog_desc, cmd_line_name)
 
 # end function: add_program
 
@@ -87,7 +88,11 @@ if __name__ == "__main__":
     
     conn = db.create_db_connection(db_filename, schema_filename)
 
+    # the application's configuration settings stored in this dictionary
+    config = {}
+    config["db_connection"] = conn
+
     # start application's menuing system
-    ui.top_menu(conn)
+    ui.top_menu(config)
 
 # ===============================================================================================
