@@ -22,7 +22,10 @@ Lesson 6 - SQL and SQLite
 Lesson 7 - Python interaction with SQLite
 --------
 
-Lesson 8 - Plotting the timings in Python: matplotlib.pylab
+Lesson 8 - Plotting in Python: matplotlib.pylab
+--------
+
+Lesson 9 - pycnumanal 0.10 – Adding/displaying programs to/from the database
 --------
 
 

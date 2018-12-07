@@ -32,8 +32,8 @@ int main( int argc, char *argv[]) {
     }
     double norm = sqrt(accum);
 
+    // figure out timing
     clock_t end_ticks = clock();  // current CPU clock tick count
-
     clock_t cpu_ticks = end_ticks - start_ticks; // elapsed CPU clock ticks
     double cpu_time_used = ((double) cpu_ticks) / CLOCKS_PER_SEC; // converts to CPU time
 

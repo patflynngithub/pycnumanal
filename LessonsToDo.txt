@@ -1,4 +1,5 @@
 
 - Readme.md
 - explain Python 2.x vs Python 3.x
-- check l2vecnorm result?
+- check l2vecnorm timing result?
+- change python to python3 in command lines in lessons

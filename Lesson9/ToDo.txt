@@ -1,6 +1,7 @@
-- add delete database entry actions (for algorithms and timings)
+- add delete database entry actions (for programs and timings)
+- add modigy database entry actions (for programs and timings)
 
-- add capability to generate multiple different timings for an algorithm via just one menu sequence of keystrokes.
+- add capability to generate multiple different timings for an program via just one menu sequence of keystrokes.
 
 - more error checking on command line parameters
 - more error checking inside c/python code
@@ -16,9 +17,8 @@
 - improve architecture of C programs
 
 - do Fortan versions of C numercical routines
-- do matrix multiplication alternatives in C (algorithms and array notation vs pointer method)
+- do matrix multiplication alternatives in C (programs and array notation vs pointer method)
 
-- work on Python 3?
 - work on Windows?
 - check Python version in code
 - check running on Windows in code
