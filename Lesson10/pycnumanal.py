@@ -27,6 +27,8 @@
 #                           - pycnumanal.py     ("core/controller")
 #                           - database.py       ("model")
 #                           - user_interface.py ("view")
+#                      - now using the "conn" variable as a global variable in database.py
+#                      - improved some commenting
 #
 # (pf) Patrick Flynn
 #
@@ -82,9 +84,9 @@ if __name__ == "__main__":
     print()
     print("working dirctory:", os.getcwd())
 
-    # database setup
+    # database setup info
     db_filename     = 'timings.db'  # database of all programs and their timings
-    schema_filename = 'schema.sql'  # structure of the programs/timings tables in the database
+    schema_filename = 'schema.sql'  # setup script for the programs/timings tables in the database
     
     db.create_db_connection(db_filename, schema_filename)
 
