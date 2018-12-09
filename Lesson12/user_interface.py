@@ -53,7 +53,7 @@ def top_menu() :
         print("(1) Add a program to the database")
         print("(2) Display programs in the database")
         print("(3) Manually add a program's timings into the database")
-        print("(4) Generate and add program's timings to the database")
+        print("(4) Generate program's timings to be added to the database")
         print("(5) Display a program's timings in the database")
         print("")
 
@@ -71,9 +71,6 @@ def top_menu() :
 
         elif selection == "3" :  # manually add timings
             manually_add_timings()
-
-        elif selection == "4" :  # generate and add timings
-            generate_and_add_timings()
 
         elif selection == "5" :  # display a program's timings
             choose_program_and_display_timings()
@@ -104,7 +101,7 @@ def display_programs() :
         print
         print("\t\tPrograms in database")
         print()
-        print("    Name                 Description                    Command line prefix")
+        print("    Name                 Description                    Program")
         print("    -------------------- ------------------------------ --------------------")
 
         k = 1
@@ -158,11 +155,11 @@ def add_program() :
     print()
     
     # user inputs new program info
-    prog_name       = input("New program name : ")
-    prog_desc       = input("Description : ")
-    cmd_line_prefix = input("Command line prefix (e.g. \"l2vecnorm\") : ")
+    prog_name     = input("New program name : ")
+    prog_desc     = input("Description : ")
+    cmd_line_name = input("Command line name (e.g. \"l2vecnorm\") : ")
 
-    main.add_program(prog_name, prog_desc, cmd_line_prefix)
+    main.add_program(prog_name, prog_desc, cmd_line_name)
 
 # end function: add_program
 
@@ -176,9 +173,9 @@ def display_timings(prog_name, timings) :
         Out: nothing
     """
 
-    print()
+    print
     print("     \"" + prog_name + "\" timings in database")
-    print()
+    print
     print("  Problem size   Timing")
     print("  ------------   ---------------")
 
@@ -225,45 +222,6 @@ def manually_add_timings() :
                 main.add_timing(prog_name, prob_size, timing)
 
 # end function: manually_add_timings
-
-# -----------------------------------------------------------------
-
-def generate_and_add_timings() :
-    """ Generate and add program's timings to the database
-
-        In:  nothing
-        Out: nothing
-    """
-
-    prog_name = choose_program()
-
-    # check if any programs were found
-    if prog_name == "":
-        return
-    else :
-        timings  = main.get_timings(prog_name)
-        
-        # check if any timings were found
-        if len(timings) == 0 :
-            print()
-            print(prog_name, "has no timings in database")
-        else :
-            display_timings(prog_name, timings)
-            
-        while 1 :
-            # user inputs a new program size to generate a timing for
-            prob_size = int( input("Enter problem size (positive integer, 0 to exit) : ") )
-            
-            if prob_size == 0 :
-                break
-            else :  # generate/add/print the timing
-
-                timing = main.generate_and_add_timings(prog_name, prob_size)
-                print()
-                print("Timing = {:>.6f}".format(timing))
-                print()
-                
-# end function: generate_and_add_timings
 
 # -----------------------------------------------------------------
 

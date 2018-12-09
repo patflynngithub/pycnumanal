@@ -1,8 +1,8 @@
 -- Master table of programs
 create table programs (
-    program_name    text primary key,
-    description     text,
-    cmd_line_prefix text
+    program_name  text primary key,
+    description   text,
+    cmd_line_name text
 );
 
 -- Stores the timings for the above programs

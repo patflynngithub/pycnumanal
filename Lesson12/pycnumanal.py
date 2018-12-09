@@ -73,16 +73,16 @@ def get_programs() :
 
 # -----------------------------------------------------------------
 
-def add_program(prog_name, prog_desc, cmd_line_prefix) :   
+def add_program(prog_name, prog_desc, cmd_line_name) :   
     """ Add a new program to the database
 
-        In:  prog_name       - program name (string)
-             prog_desc       - program description (string)
-             cmd_line_prefix - command line name (string)
+        In:  prog_name     - program name (string)
+             prog_desc     - program description (string)
+             cmd_line_name - command line name (string)
         Out: nothing
     """
 
-    db.add_program(prog_name, prog_desc, cmd_line_prefix)
+    db.add_program(prog_name, prog_desc, cmd_line_name)
 
 # end function: add_program
 
@@ -116,46 +116,6 @@ def add_timing(prog_name, prob_size, timing) :
     db.add_timing(prog_name, prob_size, timing)
 
 # end function: add_timing
-
-# -----------------------------------------------------------------
-def generate_timing(prog_name, prob_size) :
-    """ Generate a timing for a problem size for a program
-
-        In:  prog_name - name of the program getting timings for (string)
-             prob_size - problem size (integer)
-        Out: timing    - timing for problem size (float)
-    """
-
-    cmd_line_prefix = db.get_cmd_line_prefix(prog_name)
-
-    # prepare OS command-line style command
-    command_line = "./" + cmd_line_prefix + " " + str(prob_size)
-
-    # call the external program; it is assumed that the external program
-    # outputs only the timing in the first line of its console output
-    retvalue = os.popen(command_line).readlines()
-    timing   = float(retvalue[0].strip())
-    
-    return timing
-
-# end function: generate_timing
-
-# -----------------------------------------------------------------
-
-def generate_and_add_timings(prog_name, prob_size) :
-    """ Generate and add a program's timing to the database
-
-        In:  prog_name - name of the program getting timings for (string)
-             prob_size - problem size (integer)
-        Out: timing    - timing for problem size (float)
-    """
-    
-    timing = generate_timing(prog_name, prob_size)
-    add_timing(prog_name, prob_size, timing)
-
-    return timing
-    
-# end function: generate_and_add_timings
 
 # -----------------------------------------------------------------
 

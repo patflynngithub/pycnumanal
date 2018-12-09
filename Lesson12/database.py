@@ -82,7 +82,7 @@ def get_programs() :
     cur = conn.cursor()  # database table cursor
 
     # get all programs in the database
-    cur.execute("SELECT program_name, description, cmd_line_prefix FROM programs")    
+    cur.execute("SELECT program_name, description, cmd_line_name FROM programs")    
     progs  = cur.fetchall()
 
     return progs
@@ -91,20 +91,20 @@ def get_programs() :
 
 # -----------------------------------------------------------------
 
-def add_program(prog_name, prog_desc, cmd_line_prefix) :
+def add_program(prog_name, prog_desc, cmd_line_name) :
     """ Add a new program to the database
 
-        In:  prog_name       - program name (string)
-             prog_desc       - program description (string)
-             cmd_line_prefix - command line name (string)
+        In:  prog_name     - program name (string)
+             prog_desc     - program description (string)
+             cmd_line_name - command line name (string)
         Out: nothing
     """
 
     cur = conn.cursor()  # database table cursor
 
     # insert the new program into programs table
-    cur.execute("INSERT INTO programs (program_name, description, cmd_line_prefix) VALUES (?, ?, ?)",
-                (prog_name, prog_desc, cmd_line_prefix) )
+    cur.execute("INSERT INTO programs (program_name, description, cmd_line_name) VALUES (?, ?, ?)",
+                (prog_name, prog_desc, cmd_line_name) )
 
     # finalize the database data addition
     conn.commit()
@@ -155,25 +155,3 @@ def add_timing(prog_name, prob_size, timing) :
 # end function: add_timing
 
 # -----------------------------------------------------------------
-
-def get_cmd_line_prefix(prog_name) :
-    """ Get a program's command line prefix from the database
-
-        In:  prog_name       - name of the program getting timings for (string)
-        Out: cmd_line_prefix - the program's command line prefix
-    """
-    
-    cur = conn.cursor()  # database table cursor
-
-    # get a program's command line prefix from the database
-    cur.execute("SELECT cmd_line_prefix FROM programs WHERE program_name = ?",
-                (prog_name,) )
-    
-    cmd_line_prefix = cur.fetchall()[0][0]
-    
-    return cmd_line_prefix
-
-# end function: get_cmd_line_prefix
-
-# -----------------------------------------------------------------
-

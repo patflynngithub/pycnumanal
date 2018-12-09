@@ -1,0 +1,24 @@
+Instructions for running pycnumanal
+-----------------------------------
+
+Requires: Python 2.7.x <= version < 3.0, SQLite, gcc
+Only tested with:  Python 2.7.x, Linux Ubuntu, sqlite3
+
+1) Extract all files in the .zip to the same directory
+
+2) Compile the C programs:
+
+    gcc -o l2vecnorm l2vecnorm.c -std=gnu99 -lm
+    gcc -o linear_timing linear_timing.c -std=gnu99 -lm
+    gcc -o nlogn_timing nlogn_timing.c -std=gnu99 -lm
+    gcc -o nsquared_timing nsquared_timing.c -std=gnu99 -lm
+
+3) Run pycnumanal.py
+
+    python pycnumanl.py
+
+
+Note: the timings.db database file already has timings in it
+      so you can go right to plotting them
+
+
