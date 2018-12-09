@@ -1,12 +1,16 @@
 # pycnumanal: Generate/Plot excution timings of external programs for different problem sizes
 # 
-#     VERSION 0.11
+#    VERSION 0.12
 #
 #    pyc:     Python/C program
 #    numanal: timed numerical analysis routines written in C (could be other languages as well)
 #
-#    - adds programs to the database: names, descriptions, command line names
+#    - adds programs to the database
 #    - displays programs in the database
+#    - add program timings to database
+#         - manually enter timings
+#         - generate timings
+#    - display a program's timings
 #
 #    - runs on Linux (not tested on Windows)
 #    - Python 3.x (not tested with Python 2.x)
@@ -27,8 +31,18 @@
 #                           - pycnumanal.py     ("core/controller")
 #                           - database.py       ("model")
 #                           - user_interface.py ("view")
+#                      - added import statements to allow calling functions in other modules
 #                      - now using the "conn" variable as a global variable in database.py
 #                      - improved some commenting
+#
+#    12/08/2018 (pf)   Version 0.12:
+#                      - added new functionalities to the overall application
+#                          - manually enter in timings for a program
+#                          - generate timings for a program
+#                          - display timings for a program
+#                      - added functions to support the new functionalities
+#                          - get_timings()
+#                          - add_timing()
 #
 # (pf) Patrick Flynn
 #
@@ -71,6 +85,37 @@ def add_program(prog_name, prog_desc, cmd_line_name) :
     db.add_program(prog_name, prog_desc, cmd_line_name)
 
 # end function: add_program
+
+# -----------------------------------------------------------------
+
+def get_timings(prog_name) :
+    """ Get a program's timings from the database
+
+        In:  prog_name - name of the program getting timings for (string)
+        Out: timings   - all timings for the given program (list of 2-tuples)
+    """
+
+    timings = db.get_timings(prog_name)
+    
+    return timings
+
+# end function: get_timings
+
+# -----------------------------------------------------------------
+
+def add_timing(prog_name, prob_size, timing) :
+
+    """ Add a program's timing to the database
+
+        In:  prog_name - name of the program getting timings for (string)
+             prob_size - problem size (integer)
+             timing    - timing for problem size (float)
+        Out: nothing
+    """
+
+    db.add_timing(prog_name, prob_size, timing)
+
+# end function: add_timing
 
 # -----------------------------------------------------------------
 

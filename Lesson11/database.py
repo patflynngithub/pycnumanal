@@ -1,6 +1,6 @@
 # database: Implements the database portion of the pycnumanal application
 # 
-#     VERSION 0.11
+#    VERSION 0.12
 #
 #    - creates database/tables if they don't already exist
 #    - adds programs to the database: names, descriptions, command line names
@@ -21,6 +21,15 @@
 #                        and user interface operations of pycnumanal version 0.10
 #                      - stores database connection in MODULE GLOBAL VARIABLE: conn
 #
+#    12/08/2018 (pf)   Version 0.12:
+#                      - added new functionalities to the overall application
+#                          - manually entering in timings for a program
+#                          - generating timings for a program
+#                          - displaying timings for a program
+#                      - added functions to support the new functionalities
+#                          - get_timings()
+#                          - add_timing()
+
 # (pf) Patrick Flynn
 #
 # ---------------------------------------------------------
@@ -37,6 +46,8 @@ def create_db_connection(db_filename, schema_filename) :
         In:  db_filename     - database of all programs and their timings (string)
              schema_filename - structure of the programs/timings tables in the database (string)
         Out: nothing
+        
+        Side affect: intializes the global variable: conn
     """
 
     # MODULE GLOBAL VARIABLE
@@ -99,5 +110,48 @@ def add_program(prog_name, prog_desc, cmd_line_name) :
     conn.commit()
 
 # end function: add_program
+
+# -----------------------------------------------------------------
+
+def get_timings(prog_name) :
+    """ Get a program's timings from the database
+
+        In:  prog_name - name of the program getting timings for (string)
+        Out: timings   - all timings for the given program (list of 2-tuples)
+    """
+    
+    cur = conn.cursor()  # database table cursor
+
+    # get a program's timings from the database
+    cur.execute("SELECT problem_size, timing FROM timings WHERE program_name = ? ORDER BY problem_size ASC",
+                (prog_name,) )
+    timings = cur.fetchall()
+
+    return timings
+
+# end function: get_timings
+
+# -----------------------------------------------------------------
+
+def add_timing(prog_name, prob_size, timing) :
+    """ Add a program's timing for a problem size to the database
+
+        In:  prog_name - name of the program getting timings for (string)
+             prog_size - problem size (integer)
+             timing    - timing (float)
+        Out: nothing
+    """
+
+    # get database table cursor
+    cur = conn.cursor()  
+
+    # insert the new timing into the timings table
+    cur.execute("INSERT INTO timings (problem_size, timing, program_name) VALUES (?, ?, ?)",
+                (prob_size, timing, prog_name) )
+
+    # finalize the database data addition
+    conn.commit()
+
+# end function: add_timing
 
 # -----------------------------------------------------------------
