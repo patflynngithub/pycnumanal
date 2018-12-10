@@ -3,7 +3,7 @@
 #     VERSION 0.11
 #
 #    - creates database/tables if they don't already exist
-#    - adds programs to the database: names, descriptions, command line names
+#    - adds programs to the database
 #    - displays programs in the database
 #
 #    - runs on Linux (not tested on Windows)
@@ -71,7 +71,7 @@ def get_programs() :
     cur = conn.cursor()  # database table cursor
 
     # get all programs in the database
-    cur.execute("SELECT program_name, description, cmd_line_name FROM programs")    
+    cur.execute("SELECT program_name, description, cmd_line_prefix FROM programs")    
     progs  = cur.fetchall()
 
     return progs
@@ -80,20 +80,20 @@ def get_programs() :
 
 # -----------------------------------------------------------------
 
-def add_program(prog_name, prog_desc, cmd_line_name) :
+def add_program(prog_name, prog_desc, cmd_line_prefix) :
     """ Add a new program to the database
 
-        In:  prog_name     - program name (string)
-             prog_desc     - program description (string)
-             cmd_line_name - command line name (string)
+        In:  prog_name       - program name (string)
+             prog_desc       - program description (string)
+             cmd_line_prefix - command line prefix (string)
         Out: nothing
     """
 
     cur = conn.cursor()  # database table cursor
 
     # insert the new program into programs table
-    cur.execute("INSERT INTO programs (program_name, description, cmd_line_name) VALUES (?, ?, ?)",
-                (prog_name, prog_desc, cmd_line_name) )
+    cur.execute("INSERT INTO programs (program_name, description, cmd_line_prefix) VALUES (?, ?, ?)",
+                (prog_name, prog_desc, cmd_line_prefix) )
 
     # finalize the database data addition
     conn.commit()

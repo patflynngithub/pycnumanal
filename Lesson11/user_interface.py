@@ -25,7 +25,7 @@
 #                        "separating the concerns" of the core, database,
 #                        and user_interface operations of pycnumanal version 0.10
 #                      - added import statement to allow calling of functions in pycnumanal module
-#    12/07/2018 (pf)   Version 0.12:
+#    12/08/2018 (pf)   Version 0.12:
 #                      - added new functionalities to the overall application
 #                          - manually entering in timings for a program
 #                          - generating timings for a program
@@ -183,7 +183,7 @@ def display_timings(prog_name, timings) :
     print("  ------------   ---------------")
 
     for timing_info in timings :
-        print("  {:>12d}   {:>15.6f}".format(timing_info[0], timing_info[1]))
+        print("  {:<12d}   {:>15.6f}".format(timing_info[0], timing_info[1]))
 
     print()
 
@@ -213,7 +213,6 @@ def manually_add_timings() :
         else :
             display_timings(prog_name, timings)
 
-            print()
         while 1 :
             # user inputs a new program size amd timing for the program
             print()
@@ -249,6 +248,8 @@ def generate_and_add_timings() :
             print(prog_name, "has no timings in database")
         else :
             display_timings(prog_name, timings)
+
+        print()
             
         while 1 :
             # user inputs a new program size to generate a timing for
@@ -259,7 +260,6 @@ def generate_and_add_timings() :
             else :  # generate/add/print the timing
 
                 timing = main.generate_and_add_timings(prog_name, prob_size)
-                print()
                 print("Timing = {:>.6f}".format(timing))
                 print()
                 

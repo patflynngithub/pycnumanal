@@ -5,7 +5,7 @@
 #    pyc:     Python/C program
 #    numanal: timed numerical analysis routines written in C (could be other languages as well)
 #
-#    - adds programs to the database: names, descriptions, command line names
+#    - adds programs to the database
 #    - displays programs in the database
 #
 #    - runs on Linux (not tested on Windows)
@@ -59,16 +59,16 @@ def get_programs() :
 
 # -----------------------------------------------------------------
 
-def add_program(prog_name, prog_desc, cmd_line_name) :   
+def add_program(prog_name, prog_desc, cmd_line_prefix) :   
     """ Add a new program to the database
 
-        In:  prog_name     - program name (string)
-             prog_desc     - program description (string)
-             cmd_line_name - command line name (string)
+        In:  prog_name       - program name (string)
+             prog_desc       - program description (string)
+             cmd_line_prefix - command line prefix (string)
         Out: nothing
     """
 
-    db.add_program(prog_name, prog_desc, cmd_line_name)
+    db.add_program(prog_name, prog_desc, cmd_line_prefix)
 
 # end function: add_program
 

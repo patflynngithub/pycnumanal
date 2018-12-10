@@ -7,10 +7,10 @@
 #
 #    - adds programs to the database
 #    - displays programs in the database
-#    - add program timings to database
-#         - manually enter timings
-#         - generate timings
+#    - manually add program timings to database
+#    - generate/store timings for a program
 #    - display a program's timings
+#    - plot timings for a program
 #
 #    - runs on Linux (not tested on Windows)
 #    - Python 3.x (not tested with Python 2.x)
@@ -27,7 +27,7 @@
 #                      - implemented adding/displaying programs in the database
 #
 #    12/07/2018 (pf)   Version 0.11:
-#                      - reorganized version 0.10 general functionalities into three modules (files):
+#                      - reorganized version 0.10 functionalities into three files:
 #                           - pycnumanal.py     ("core/controller")
 #                           - database.py       ("model")
 #                           - user_interface.py ("view")
@@ -43,13 +43,18 @@
 #                      - added functions to support the new functionalities
 #                          - get_timings()
 #                          - add_timing()
+#                          - generate_timing()
+#                          - generate_and_add_timing()
+#
+#    12/09/2018 (pf)   Version 0.13:
+#                      - added new functionality to the overall application
+#                          - plot timings (vs problem size)
 #
 # (pf) Patrick Flynn
 #
 # ---------------------------------------------------------
 
 #standard modules
-import sys
 import os
 
 # custom modules
@@ -73,16 +78,16 @@ def get_programs() :
 
 # -----------------------------------------------------------------
 
-def add_program(prog_name, prog_desc, cmd_line_name) :   
+def add_program(prog_name, prog_desc, cmd_line_prefix) :   
     """ Add a new program to the database
 
-        In:  prog_name     - program name (string)
-             prog_desc     - program description (string)
-             cmd_line_name - command line name (string)
+        In:  prog_name       - program name (string)
+             prog_desc       - program description (string)
+             cmd_line_prefix - command line prefix (string)
         Out: nothing
     """
 
-    db.add_program(prog_name, prog_desc, cmd_line_name)
+    db.add_program(prog_name, prog_desc, cmd_line_prefix)
 
 # end function: add_program
 
@@ -116,6 +121,46 @@ def add_timing(prog_name, prob_size, timing) :
     db.add_timing(prog_name, prob_size, timing)
 
 # end function: add_timing
+
+# -----------------------------------------------------------------
+def generate_timing(prog_name, prob_size) :
+    """ Generate a timing of a problem size for a program
+
+        In:  prog_name - name of the program getting timings for (string)
+             prob_size - problem size (integer)
+        Out: timing    - timing for problem size (float)
+    """
+
+    cmd_line_prefix = db.get_cmd_line_prefix(prog_name)
+
+    # prepare OS command-line style command
+    command_line = "./" + cmd_line_prefix + " " + str(prob_size)
+
+    # call the external program; it is assumed that the external program
+    # outputs only the timing in the first line of its console output
+    retvalue = os.popen(command_line).readlines()
+    timing   = float(retvalue[0].strip())
+    
+    return timing
+
+# end function: generate_timing
+
+# -----------------------------------------------------------------
+
+def generate_and_add_timing(prog_name, prob_size) :
+    """ Generate and add a program's timing to the database
+
+        In:  prog_name - name of the program getting timings for (string)
+             prob_size - problem size (integer)
+        Out: timing    - timing for problem size (float)
+    """
+    
+    timing = generate_timing(prog_name, prob_size)
+    add_timing(prog_name, prob_size, timing)
+
+    return timing
+    
+# end function: generate_and_add_timing
 
 # -----------------------------------------------------------------
 

@@ -21,11 +21,11 @@ with sqlite3.connect(db_filename) as conn:
         print('Database exists, assume schema does too.')
 
     # setup for running external program (e.g., C program) to get timing
-    program_name  = 'l2 vector norm'
-    description   = 'l2 vector norm in C'
-    cmd_line_name = 'l2vecnorm'
-    problem_size  = 1000000
-    command_line  = "./" + cmd_line_name + " " + str(problem_size)
+    program_name    = 'l2 vector norm'
+    description     = 'l2 vector norm in C'
+    cmd_line_prefix = 'l2vecnorm'
+    problem_size    = 1000000
+    command_line    = "./" + cmd_line_prefix + " " + str(problem_size)
 
     # call the external program; it is assumed that the external program
     # outputs only the timing in its first line of console output
@@ -35,8 +35,8 @@ with sqlite3.connect(db_filename) as conn:
     cur = conn.cursor()  # database table cursor
 
     # insert external program into programs table
-    cur.execute("INSERT OR IGNORE INTO programs (program_name, description, cmd_line_name) VALUES (?, ?, ?)",
-                (program_name, description, cmd_line_name) )
+    cur.execute("INSERT OR IGNORE INTO programs (program_name, description, cmd_line_prefix) VALUES (?, ?, ?)",
+                (program_name, description, cmd_line_prefix) )
     print('Inserted program into programs table')
 
     # insert timing into timings table

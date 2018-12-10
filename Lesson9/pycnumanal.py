@@ -5,7 +5,7 @@
 #    pyc:     Python/C program
 #    numanal: timed numerical analysis routines written in C (could be other languages as well)
 #
-#    - adds programs to the database: names, descriptions, command line names
+#    - adds programs to the database
 #    - displays programs in the database
 #
 #    - runs on Linux (not tested on Windows)
@@ -72,7 +72,7 @@ def get_programs(conn) :
     cur = conn.cursor()  # database table cursor
 
     # get all programs in the database
-    cur.execute("SELECT program_name, description, cmd_line_name FROM programs")    
+    cur.execute("SELECT program_name, description, cmd_line_prefix FROM programs")    
     progs  = cur.fetchall()
 
     return progs
@@ -126,15 +126,15 @@ def add_program(conn) :
     print()
     
     # user inputs new program info
-    prog_name     = input("New program name : ")
-    prog_desc     = input("Description : ")
-    cmd_line_name = input("Command line name (e.g. \"l2vecnorm\") : ")
+    prog_name       = input("New program name : ")
+    prog_desc       = input("Description : ")
+    cmd_line_prefix = input("Command line prefix (e.g. \"l2vecnorm\") : ")
 
     cur = conn.cursor()  # database table cursor
 
     # insert the new program into programs table
-    cur.execute("INSERT INTO programs (program_name, description, cmd_line_name) VALUES (?, ?, ?)",
-                (prog_name, prog_desc, cmd_line_name) )
+    cur.execute("INSERT INTO programs (program_name, description, cmd_line_prefix) VALUES (?, ?, ?)",
+                (prog_name, prog_desc, cmd_line_prefix) )
 
     # finalize the database data addition
     conn.commit()

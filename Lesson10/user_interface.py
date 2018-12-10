@@ -119,11 +119,11 @@ def add_program() :
     print()
     
     # user inputs new program info
-    prog_name     = input("New program name : ")
-    prog_desc     = input("Description : ")
-    cmd_line_name = input("Command line name (e.g. \"l2vecnorm\") : ")
+    prog_name       = input("New program name : ")
+    prog_desc       = input("Description : ")
+    cmd_line_prefix = input("Command line prefix (e.g. \"l2vecnorm\") : ")
 
-    main.add_program(prog_name, prog_desc, cmd_line_name)
+    main.add_program(prog_name, prog_desc, cmd_line_prefix)
 
 # end function: add_program
 

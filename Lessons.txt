@@ -1,7 +1,7 @@
                            Lesson Descriptions
                            ===================
 
-Lesson 1 - Create project on Github and locally
+Lesson 1 - Create the pycnumanal project on your GitHub account and locally on your PC
 -------
 
 Lesson 2 - Create your first C program

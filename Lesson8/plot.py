@@ -18,9 +18,8 @@ if not db_exists:
 with sqlite3.connect(db_filename) as conn:
 
     # setup for querying timings database for desired timings
-    program_name       = 'l2 vector norm'
-    description        = 'l2 vector norm in C'
-    cmd_line_name      = 'l2vecnorm'
+    program_name         = 'l2 vector norm'
+
     cur = conn.cursor()  # database table cursor
 
     # extract desired timings from timings table

@@ -78,7 +78,7 @@ def add_program(prog_name, prog_desc, cmd_line_prefix) :
 
         In:  prog_name       - program name (string)
              prog_desc       - program description (string)
-             cmd_line_prefix - command line name (string)
+             cmd_line_prefix - command line prefix (string)
         Out: nothing
     """
 
