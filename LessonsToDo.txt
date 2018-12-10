@@ -1,6 +1,12 @@
 
 - Readme.md
 - explain Python 2.x vs Python 3.x
-- check external program timing result for erros?
+- check external program timing result for errors?
 - change python to python3 in command lines in lessons
+- check progression of ToDo.txt and DevelopmentNotes.txt
+- note about how we're using Git/GitHub in a non-standard way
+- does one need to be in the pycnumanal directory to when doing a "git add -A ."
+- Update menu text to latest versions. Do this in all code and Lesson scripts.
+- clean up all files and rehost cleanly on GitHub
+- make sure lesson titles in Lessons.txt accurately reflect latest lesson titles
 
