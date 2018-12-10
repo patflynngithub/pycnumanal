@@ -9,4 +9,5 @@
 - Update menu text to latest versions. Do this in all code and Lesson scripts.
 - clean up all files and rehost cleanly on GitHub
 - make sure lesson titles in Lessons.txt accurately reflect latest lesson titles
-
+- check Readings sectoins in all Lesson writeups
+- change all pycnumanal directory references to just pycnumanal

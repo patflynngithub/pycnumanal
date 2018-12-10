@@ -7,7 +7,7 @@ Lesson 1 - Create the pycnumanal project on your GitHub account and locally on y
 Lesson 2 - Create your first C program
 --------
 
-Lesson 3 - Compiler Basics with gcc
+Lesson 3 - Compiler basics with gcc
 --------
 
 Lesson 4 - Understanding some basic C code
@@ -27,5 +27,17 @@ Lesson 8 - Plotting in Python: matplotlib.pylab
 
 Lesson 9 - pycnumanal 0.10 – Adding/displaying programs to/from the database
 --------
+
+Lesson 10 - 
+---------
+
+Lesson 11 - 
+---------
+
+Lesson 12 - 
+---------
+
+Lesson 13 - 
+---------
 
 
