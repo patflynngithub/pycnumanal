@@ -37,7 +37,6 @@ Lesson 11 - pycnumanal version 0.12 – Program timings
 Lesson 12 - pycnumanal version 0.13 – Graphically plotting program timings
 ---------
 
-Lesson 13 - 
+Lesson 13 - Learning by doing programming!
 ---------
-
 

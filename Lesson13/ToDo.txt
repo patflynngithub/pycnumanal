@@ -1,25 +1,30 @@
-- add delete database entry actions (for algorithms and timings)
 
-- add capability to generate multiple different timings for an algorithm via just one menu sequence of keystrokes.
+(also check list in Lesson13.doc)
+
+- add delete database entry capability (for programs and timings)
+- add modify database data capability
+
+- add capability to enter multiple numeric entries on one input line
+    - problem sizes for generating timings for a program
+    - progrma #'s for plotting multiple program timings on a single plot
+
+- add capability to enter multiple different program #'s (to plot timings for on a single plot)
 
 - more error checking on command line parameters
 - more error checking inside c/python code
 - experiment what happens when C numerical code explodes (e.g. n too large or too small)
 
-- improve architecture of C programs
-- improve architecture of pycnumanal (MVC/MVP pattern)
-
-- make it so that you can add multiple program sizes timings w/o having to go back to the top menu
+- when entering program info (program name, description, command line prefix), prompt with entered info
+  to verify correctness
 - GUI menuing system
 
 - l2vecnorm: check for non-positive vector size
 - improve architecture of C programs
 
-- do Fortan versions of C numercical routines
-- do matrix multiplication alternatives in C (algorithms and array notation vs pointer method)
+- do Fortan versions of C numerical routines
+- do matrix multiplication alternatives in C (programs and array notation vs pointer method)
 
-- work on Python 3?
 - work on Windows?
-- check Python version in code
 - check running on Windows in code
+- check Python version in code
 
