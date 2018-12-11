@@ -4,3 +4,5 @@ A Python program that, choosing from a collection of C numerical routines (or al
 
 See syllabus.doc for more details.
 
+NOTE: while the code here contains much of my "good" programming habits and design philosophy, there are elements of the code that were designed to support the learning process for a less experienced programmer. For example, while I do not comment code lightly, there is more commenting in this code than I would normally do. Also, some of the structural decisions/implementations were done in away so as to make it easier for the learner to follow.
+
