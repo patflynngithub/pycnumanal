@@ -1,5 +1,9 @@
+*****
+- delete executables and add compilation notes to beginnings of every lesson
+- go thru lessons to add "(Python module)" phrase to the Assumptions entries
+*****
 
-- Readme.md
+- improve Reading sections and change Reading to Extra Reading
 - explain Python 2.x vs Python 3.x
 - check external program timing result for errors?
 - change python to python3 in command lines in lessons
@@ -9,5 +13,5 @@
 - Update menu text to latest versions. Do this in all code and Lesson scripts.
 - clean up all files and rehost cleanly on GitHub
 - make sure lesson titles in Lessons.txt accurately reflect latest lesson titles
-- check Readings sectoins in all Lesson writeups
 - change all pycnumanal directory references to just pycnumanal
+- in several places, need to give a little more verbiage and links about Python datatypes such as lists, tuples, etc.

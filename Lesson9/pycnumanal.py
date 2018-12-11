@@ -18,7 +18,7 @@
 #
 # Change log:
 #
-#    12/06/2018 (pf)   Version 0.1:
+#    12/06/2018 (pf)   Version 0.10:
 #                      - implemented adding/displaying programs in the database
 #
 # (pf) Patrick Flynn

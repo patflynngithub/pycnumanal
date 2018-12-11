@@ -1,34 +1,34 @@
                            Lesson Descriptions
                            ===================
 
-Lesson 1 - Create the pycnumanal project on your GitHub account and locally on your PC
+Lesson 1 -  Create the pycnumanal project on your GitHub account and locally on your PC
 -------
 
-Lesson 2 - Create your first C program
+Lesson 2 -  Create your first C program
 --------
 
-Lesson 3 - Compiler basics with gcc
+Lesson 3 -  Compiler basics with gcc
 --------
 
-Lesson 4 - Understanding some basic C code
+Lesson 4 -  Understanding some basic C code
 --------
 
-Lesson 5 - Timing in C, getting started with Python, and interfacing Python with C
+Lesson 5 -  Timing in C, getting started with Python, and interfacing Python with C
 --------
 
-Lesson 6 - SQL and SQLite
+Lesson 6 -  SQL and SQLite
 --------
 
-Lesson 7 - Python interaction with SQLite
+Lesson 7 -  Python interaction with SQLite
 --------
 
-Lesson 8 - Plotting in Python: matplotlib.pylab
+Lesson 8 -  Plotting in Python: matplotlib.pyplot
 --------
 
-Lesson 9 - pycnumanal 0.10 – Adding/displaying programs to/from the database
+Lesson 9 -  pycnumanal 0.10 – Adding/displaying programs to/from the database
 --------
 
-Lesson 10 - 
+Lesson 10 - pycnumanal 0.11 – “Separation of concerns”
 ---------
 
 Lesson 11 - 

@@ -39,8 +39,8 @@ with sqlite3.connect(db_filename) as conn:
 
     # plot the timings
     fig = plt.figure()
-    fig.canvas.set_window_title('Timing vs Problem size') 
-    plt.plot(problem_sizes, timings)
+    fig.canvas.set_window_title('Timings vs Problem Size') 
+    plt.plot(problem_sizes, timings, 'o-')
     plt.xlabel('problem size')
     plt.ylabel('seconds')
     plt.title("Timings for " + program_name)
