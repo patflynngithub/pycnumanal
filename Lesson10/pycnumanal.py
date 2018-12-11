@@ -1,4 +1,5 @@
-# pycnumanal: Generate/Plot excution timings of external programs for different problem sizes
+# pycnumanal: Generate/Plot excution timings of external programs for different problem sizes. This timing info
+#             is stored in a database
 # 
 #     VERSION 0.11
 #
