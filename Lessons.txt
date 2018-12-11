@@ -31,10 +31,10 @@ Lesson 9 -  pycnumanal version 0.10 – Adding/displaying programs to/from the d
 Lesson 10 - pycnumanal version 0.11 – “Separation of concerns”
 ---------
 
-Lesson 11 - pycnumanal version 0.12 – Program timing functionalities
+Lesson 11 - pycnumanal version 0.12 – Program timings
 ---------
 
-Lesson 12 - pycnumanal version 0.13 – graphically plotting program timings functionality
+Lesson 12 - pycnumanal version 0.13 – Graphically plotting program timings
 ---------
 
 Lesson 13 - 

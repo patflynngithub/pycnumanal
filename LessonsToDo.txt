@@ -1,6 +1,7 @@
 *****
 - delete executables and add compilation notes to beginnings of every lesson
 - go thru lessons to add "(Python module)" phrase to the Assumptions entries
+- clean up directories
 *****
 
 - improve Reading sections and change Reading to Extra Reading
