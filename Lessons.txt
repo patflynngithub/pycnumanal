@@ -25,16 +25,16 @@ Lesson 7 -  Python interaction with SQLite
 Lesson 8 -  Plotting in Python: matplotlib.pyplot
 --------
 
-Lesson 9 -  pycnumanal 0.10 – Adding/displaying programs to/from the database
+Lesson 9 -  pycnumanal version 0.10 – Adding/displaying programs to/from the database
 --------
 
-Lesson 10 - pycnumanal 0.11 – “Separation of concerns”
+Lesson 10 - pycnumanal version 0.11 – “Separation of concerns”
 ---------
 
-Lesson 11 - 
+Lesson 11 - pycnumanal version 0.12 – Program timing functionalities
 ---------
 
-Lesson 12 - 
+Lesson 12 - pycnumanal version 0.13 – graphically plotting program timings functionality
 ---------
 
 Lesson 13 - 
