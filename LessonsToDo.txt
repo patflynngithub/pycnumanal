@@ -12,4 +12,5 @@
 - Update menu text to latest versions. Do this in all code and Lesson scripts.
 - in several Lessons, need to give a little more verbiage and links about Python datatypes such as lists, tuples, etc.
 - check pedagogy in the lesson to make sure give adequate basic Python and C language training
+- update LessonsCommands.txt
 
