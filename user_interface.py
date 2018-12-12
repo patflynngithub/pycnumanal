@@ -9,6 +9,7 @@
 #         - manually enter timings for a program
 #         - generate/store timings for a program
 #         - display timings for a program
+#         - delete all of a program's timings
 #         - plot timings for a program
 #
 #    - runs on Linux (not tested on Windows)
@@ -44,6 +45,10 @@
 #                      - added function to support the above new functionality
 #                          - plot_timings()
 #
+#    12/12/2018 (pf)   - added "Delete all of a program's timings" functionality
+#                          - added option to top_menu()
+#                          - added delete_program_timings()
+#
 # (pf) Patrick Flynn
 #
 # ---------------------------------------------------------
@@ -66,7 +71,8 @@ def top_menu() :
         print("(3) Manually add a program's timings to the database")
         print("(4) Automatically generate and add a program's timings to the database")
         print("(5) Display a program's timings in the database")
-        print("(6) Plot timings for programs")
+        print("(6) Delete all of a program's timings")
+        print("(7) Plot timings for programs")
         print("")
 
         selection = input("Enter selection number (0 to exit) : ")
@@ -90,7 +96,10 @@ def top_menu() :
         elif selection == "5" :  # display a program's timings
             choose_program_and_display_timings()
 
-        elif selection == "6" :  # plot timings
+        elif selection == "6" :  # delete all of a program's timings
+            delete_program_timings()
+            
+        elif selection == "7" :  # plot timings
             plot_timings()
 
         else : 
@@ -305,6 +314,31 @@ def choose_program_and_display_timings() :
             display_timings(prog_name, timings)
 
 # end function: choose_and_display_timings
+
+# -----------------------------------------------------------------
+def delete_program_timings() :
+    """ Delete all of a program's timings
+
+        In:  nothing
+        Out: nothing
+    """
+
+    prog_name = choose_program()
+
+    # check if any programs were found
+    if prog_name == "":
+        return
+    else :
+        timings  = main.get_timings(prog_name)
+        
+        # check if any timings were found
+        if len(timings) == 0 :
+            print()
+            print(prog_name, "has no timings in database")
+        else :
+            main.delete_program_timings(prog_name)
+            print("{}'s timings deleted".format(prog_name))
+# end function: delete_program_timings
 
 # -----------------------------------------------------------------
 

@@ -1,6 +1,8 @@
 
 (also check list in Lesson13.doc)
 
+- streamline comments to more professional style rather than teaching style
+
 - add delete database entry capability (for programs and timings)
 - add modify database data capability
 

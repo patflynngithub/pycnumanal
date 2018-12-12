@@ -6,10 +6,11 @@ create table programs (
 );
 
 -- Stores the timings for the above programs
+--   12/12/2018:  added "on delete cascade" to program_name foreign key
 create table timings (
     id           integer primary key autoincrement not null,
     problem_size integer,
     timing       real,
-    program_name text not null references programs(program_name)
+    program_name text not null references programs(program_name) on delete cascade
 );
 

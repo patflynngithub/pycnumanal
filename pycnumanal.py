@@ -10,6 +10,7 @@
 #    - manually add program timings to database
 #    - generate/store timings for a program
 #    - display a program's timings
+#    - delete all of a program's timings
 #    - plot timings for a program
 #
 #    - runs on Linux (not tested on Windows)
@@ -49,6 +50,8 @@
 #    12/09/2018 (pf)   Version 0.13:
 #                      - added new functionality to the overall application
 #                          - plot timings (vs problem size)
+#
+#    12/12/2018 (pf)   - added delete_program_timings()
 #
 # (pf) Patrick Flynn
 #
@@ -105,6 +108,19 @@ def get_timings(prog_name) :
     return timings
 
 # end function: get_timings
+
+# -----------------------------------------------------------------
+
+def delete_program_timings(prog_name) :
+    """ Delete all of a program's timings
+
+        In:  prog_name - program whose timings are to be deleted (string)
+        Out: nothing
+    """
+
+    db.delete_program_timings(prog_name)
+    
+# end function: delete_program_timings
 
 # -----------------------------------------------------------------
 

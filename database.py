@@ -8,6 +8,7 @@
 #    - manually enter timings for a program
 #    - generate/store timings for a program
 #    - display timings for a program
+#    - delete all of a program's timings
 #    - plot timings for a program
 #
 #    - runs on Linux (not tested on Windows)
@@ -34,6 +35,10 @@
 #                          - get_timings()
 #                          - add_timing()
 #                          - get_cmd_line_prefix()
+#
+#    12/12/2018 (pf)   - added delete_program_timings()
+#                      - timings table creation in schema.sql: 
+#                          - added "on delete cascade" to program_name foreign key
 #
 # (pf) Patrick Flynn
 #
@@ -144,7 +149,7 @@ def add_timing(prog_name, prob_size, timing) :
              prog_size - problem size (integer)
              timing    - timing (float)
         Out: nothing
-    """
+    """ 
 
     # get database table cursor
     cur = conn.cursor()  
@@ -157,6 +162,24 @@ def add_timing(prog_name, prob_size, timing) :
     conn.commit()
 
 # end function: add_timing
+
+# -----------------------------------------------------------------
+
+def delete_program_timings(prog_name) :
+    """ Delete all of a program's timings
+
+        In:  prog_name - program whose timings are to be deleted (string)
+        Out: nothing
+    """ 
+
+    cur = conn.cursor()
+
+    cur.execute("DELETE FROM timings WHERE program_name = ?",
+                (prog_name,) )
+
+    conn.commit()
+
+# end function: delete_program_timings
 
 # -----------------------------------------------------------------
 
