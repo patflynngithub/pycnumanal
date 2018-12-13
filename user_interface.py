@@ -53,8 +53,15 @@
 #                          - added delete_program_timings()
 #                      - professionalized the commenting
 #                          - pycnumanal-lessons version has more commenting for the student
-#                      - modified generate_and_add_timings() to have just one line of input
-#                        for multiple problem sizes
+#                      - modified generate_and_add_timings() 
+#                          - to allow user to use just one line of input to enter multiple 
+#                            problem sizes
+#
+#    12/12/2018 (pf)   - modified plot_timings()
+#                          - allow user to use enter one line of input to choose multiple 
+#                            programs (program #'s)
+#                          - added code and rearranged the logic to better handle chosen
+#                            programs that have no timings
 #
 # (pf) Patrick Flynn
 #
@@ -363,50 +370,62 @@ def plot_timings() :
     progs = display_programs()
     print()
 
-    # choose the programs to plot
-    prog_nums = []
-    while 1 :
-        prog_num = int( input("Enter a program # to plot timings for (0 to stop) : ") )
-        if prog_num == 0 : break
-        prog_nums.append(prog_num)
+    # user inputs the program #'s to plot timings for
+    prog_nums_string = input("Enter program #'s to plot timings for (e.g., 2 3 4): ")
+    prog_nums_string = prog_nums_string.strip()
 
-    # start up the plot
-    fig = plt.figure()
-    title = 'Timings vs Problem Size'
-    fig.canvas.set_window_title(title) 
-
-    # plot each program's timings by looping through
-    # the chosen programs
-    prog_names = []
-    for prog_num in prog_nums :
-
-        # get current program's info
-        prog_info = progs[prog_num-1]
-        prog_name = prog_info[0]
- 
-        timings_info = main.get_timings(prog_name)
+    # check if user entered anything
+    if prog_nums_string == "" :
+        return
+    else :
+        prog_nums = [ int(x) for x in prog_nums_string.split() ]
         
-        # check if current program has any timings
-        if len(timings_info) == 0 :  # no timings were found for current program
-            print("\nNo timings in database for " + prog_name + " program\n")
-            return
+        # looping through chosen programs to make sure have at least
+        # one set of program timings to plot
+        prog_names = []
+        progs_timing_info = []
+        for prog_num in prog_nums :
 
-        # add current program's name to the list of chosen programs that timings were found for
-        prog_names.append(prog_name)
+            # get current program's program name
+            prog_info = progs[prog_num-1]
+            prog_name = prog_info[0]
+            
+            timings_info = main.get_timings(prog_name)
+            
+            # check if current program has any timings
+            if len(timings_info) == 0 :
+                print("Program {} (#{}) has no timings".format(prog_name, prog_num))
+            else :
+                # add current program's name and timings to prog_names and progs_timing_info;
+                # thus indicating that the current program has timings
+                prog_names.append(prog_name)
+                progs_timing_info.append(timings_info)
 
-        # organize current program's timings info for plotting
-        sizes   = [timing[0] for timing in timings_info]
-        timings = [timing[1] for timing in timings_info]
+        # check to see if ended up with any entered programs
+        # that have timings
+        if len(prog_names) == 0 :
+            print("None of the programs have timings")
+        else :
+            # start up the plot
+            fig = plt.figure()
+            title = 'Timings vs Problem Size'
+            fig.canvas.set_window_title(title) 
 
-        # plot the current program's timings
-        plt.plot(sizes, timings, 'o-')
+            # plotting the timing curves
+            for timings_info in progs_timing_info :
+                # organize current program's timings info for plotting
+                sizes   = [timing[0] for timing in timings_info]
+                timings = [timing[1] for timing in timings_info]
+            
+                # plot the current program's timings
+                plt.plot(sizes, timings, 'o-')
 
-    # add overall plotting embellishments 
-    plt.xlabel('problem size')
-    plt.ylabel('timing (seconds)')
-    plt.title(title)
-    plt.legend(prog_names)
-    plt.show()
+            # add overall plotting embellishments 
+            plt.xlabel('problem size')
+            plt.ylabel('timing (seconds)')
+            plt.title(title)
+            plt.legend(prog_names)
+            plt.show()
 
 # end function: plot_timings
 
