@@ -55,7 +55,7 @@ import sqlite3 as sql
 # -----------------------------------------------------------------
 
 def create_db_connection(db_filename, schema_filename) :
-    """ Creates the database connection
+    """ Creates the database connection (database file created if needed)
     
         In:  db_filename     - database of all programs and their timings (string)
              schema_filename - structure of the programs/timings tables in the database (string)
@@ -71,7 +71,8 @@ def create_db_connection(db_filename, schema_filename) :
     db_is_new = not os.path.exists(db_filename)
 
     # setup connection to the database
-    with sql.connect(db_filename) as conn:  # "connect" creates the database if it doesn't yet exist
+    # "connect" creates the database if it doesn't yet exist
+    with sql.connect(db_filename) as conn:
 
         if db_is_new :  # create the tables if the database is newly created
             print('Created database, setting up tables')

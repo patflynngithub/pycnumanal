@@ -27,7 +27,7 @@
 #                        "separating the concerns" of the core, database,
 #                        and user_interface operations of pycnumanal version 0.10
 #                      - added import statement to allow calling of functions in pycnumanal module
-
+#
 #    12/08/2018 (pf)   Version 0.12:
 #                      - added new functionalities to the overall application
 #                          - manually entering in timings for a program
@@ -53,6 +53,8 @@
 #                          - added delete_program_timings()
 #                      - professionalized the commenting
 #                          - pycnumanal-lessons version has more commenting for the student
+#                      - modified generate_and_add_timings() to have just one line of input
+#                        for multiple problem sizes
 #
 # (pf) Patrick Flynn
 #
@@ -160,7 +162,7 @@ def choose_program() :
 
     # check if any programs were found
     if len(progs) == 0 :
-        prog_name = ""  # empty string is indicator that no program chosen
+        prog_name = ""  # empty string is indicator that no programs found
     else :
         # choose the program
         prog_num = int( input("Choose the program #: "))
@@ -279,18 +281,19 @@ def generate_and_add_timings() :
 
         print()
             
-        while 1 :
-            # user inputs a program size to generate a timing for
-            prob_size = int( input("Enter problem size (positive integer, 0 to exit) : ") )
+        # user inputs the program sizes to generate timings for
+        prob_sizes_input = input("Enter problem sizes to generate timings for (e.g., 10 20 30 40): ")
+        prob_sizes_input = prob_sizes_input.strip()
 
-            # check if user is done entering problem sizes
-            if prob_size == 0 :
-                break
-            else :
-
-                timing = main.generate_and_add_timing(prog_name, prob_size)
-                print("Timing = {:>.6f}".format(timing))
-                print()
+        # check if user entered anything
+        if prob_sizes_input == "" :
+            return
+        else :
+            prob_sizes = prob_sizes_input.split()
+            for prob_size_string in prob_sizes :
+                timing = main.generate_and_add_timing(prog_name, int(prob_size_string))
+                print("Timing for problem size {} = {:>.6f} seconds".format(prob_size_string, timing))
+            print()
                 
 # end function: generate_and_add_timings
 
@@ -334,16 +337,17 @@ def delete_program_timings() :
     if prog_name == "":
         return
     else :
-        # display the timings that are being deleted
+        # get timings that are being deleted
         timings  = main.get_timings(prog_name)
         
         # check if any timings were found
-        if len(timings) == 0 :
+        num_timings = len(timings)
+        if num_timings == 0 :
             print()
             print(prog_name, "has no timings in database")
         else :
             main.delete_program_timings(prog_name)
-            print("{}'s timings deleted".format(prog_name))
+            print("{}'s {} timings deleted".format(prog_name, num_timings))
             
 # end function: delete_program_timings
 
