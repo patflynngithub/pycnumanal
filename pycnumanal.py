@@ -1,6 +1,6 @@
 # pycnumanal: Generate/Plot excution timings of external programs for different problem sizes
 # 
-#    VERSION 0.12
+#    VERSION 0.13
 #
 #    pyc:     Python/C program
 #    numanal: timed numerical analysis routines written in C (could be other languages as well)
@@ -51,7 +51,11 @@
 #                      - added new functionality to the overall application
 #                          - plot timings (vs problem size)
 #
+#    THIS CODE IS NOW pycnumanal VERSION, NOT pycnumanal-lessons VERSION
+#
 #    12/12/2018 (pf)   - added delete_program_timings()
+#                      - professionalized the commenting
+#                          - pycnumanal-lessons version has more commenting for the student
 #
 # (pf) Patrick Flynn
 #
@@ -149,7 +153,8 @@ def generate_timing(prog_name, prob_size) :
 
     cmd_line_prefix = db.get_cmd_line_prefix(prog_name)
 
-    # prepare OS command-line style command
+    # prepare OS command-line style command that Python will use
+    # to call the external program
     command_line = "./" + cmd_line_prefix + " " + str(prob_size)
 
     # call the external program; it is assumed that the external program
@@ -200,4 +205,3 @@ if __name__ == "__main__":
     ui.top_menu()
 
 # ===============================================================================================
-

@@ -1,6 +1,6 @@
 # user_interface.py: pycnumanal text-based user interface system
 # 
-#    VERSION 0.12
+#    VERSION 0.13
 #
 #    - text-based menus for:
 #
@@ -27,6 +27,7 @@
 #                        "separating the concerns" of the core, database,
 #                        and user_interface operations of pycnumanal version 0.10
 #                      - added import statement to allow calling of functions in pycnumanal module
+
 #    12/08/2018 (pf)   Version 0.12:
 #                      - added new functionalities to the overall application
 #                          - manually entering in timings for a program
@@ -45,9 +46,13 @@
 #                      - added function to support the above new functionality
 #                          - plot_timings()
 #
+#    THIS CODE IS NOW pycnumanal VERSION, NOT pycnumanal-lessons VERSION
+#
 #    12/12/2018 (pf)   - added "Delete all of a program's timings" functionality
 #                          - added option to top_menu()
 #                          - added delete_program_timings()
+#                      - professionalized the commenting
+#                          - pycnumanal-lessons version has more commenting for the student
 #
 # (pf) Patrick Flynn
 #
@@ -84,13 +89,14 @@ def top_menu() :
         elif selection == "1" :  # add a program
             add_program()
 
-        elif selection == "2" :  # display programs
+        elif selection == "2" :  # display all programs
             display_programs()
 
-        elif selection == "3" :  # manually add timings
+        elif selection == "3" :  # manually add timings for a program
             manually_add_timings()
 
-        elif selection == "4" :  # automatically generate and add timings
+        elif selection == "4" :  # automatically generate and add timings 
+                                 # for a program
             generate_and_add_timings()
 
         elif selection == "5" :  # display a program's timings
@@ -99,7 +105,7 @@ def top_menu() :
         elif selection == "6" :  # delete all of a program's timings
             delete_program_timings()
             
-        elif selection == "7" :  # plot timings
+        elif selection == "7" :  # plot timings for program(s)
             plot_timings()
 
         else : 
@@ -116,15 +122,13 @@ def display_programs() :
         Out: progs - all programs in database (list of tuples)
     """
 
-    # get all programs from database
     progs = main.get_programs()
-
     print()
 
     # check if any programs were found
     if len(progs) == 0 :
         print("No programs in database")
-    else : # display all found programs
+    else : # display all programs found
         print
         print("\t\tPrograms in database")
         print()
@@ -161,7 +165,7 @@ def choose_program() :
         # choose the program
         prog_num = int( input("Choose the program #: "))
 
-        # extract desired program information
+        # extract desired information for chosen program
         prog_info = progs[prog_num-1]
         prog_name = prog_info[0]
         
@@ -238,7 +242,7 @@ def manually_add_timings() :
             display_timings(prog_name, timings)
 
         while 1 :
-            # user inputs a new program size amd timing for the program
+            # user manually inputs a new program size amd timing for the program
             print()
             prob_size = int( input("Enter problem size (positive integer, 0 to exit) : ") )
             if prob_size == 0 :
@@ -276,12 +280,13 @@ def generate_and_add_timings() :
         print()
             
         while 1 :
-            # user inputs a new program size to generate a timing for
+            # user inputs a program size to generate a timing for
             prob_size = int( input("Enter problem size (positive integer, 0 to exit) : ") )
-            
+
+            # check if user is done entering problem sizes
             if prob_size == 0 :
                 break
-            else :  # generate/add/print the timing
+            else :
 
                 timing = main.generate_and_add_timing(prog_name, prob_size)
                 print("Timing = {:>.6f}".format(timing))
@@ -329,6 +334,7 @@ def delete_program_timings() :
     if prog_name == "":
         return
     else :
+        # display the timings that are being deleted
         timings  = main.get_timings(prog_name)
         
         # check if any timings were found
@@ -338,6 +344,7 @@ def delete_program_timings() :
         else :
             main.delete_program_timings(prog_name)
             print("{}'s timings deleted".format(prog_name))
+            
 # end function: delete_program_timings
 
 # -----------------------------------------------------------------
