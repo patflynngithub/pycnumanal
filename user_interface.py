@@ -63,13 +63,39 @@
 #                          - added code and rearranged the logic to better handle chosen
 #                            programs that have no timings
 #
+#    12/13/2018 (pf)   - added get_ints_from_string()
+#
 # (pf) Patrick Flynn
 #
-# ---------------------------------------------------------
+# ======================================================================================
 
 import matplotlib.pyplot as plt
 
-# ---------------------------------------------------------
+# ======================================================================================
+#
+#    Utility functions
+#
+
+def get_ints_from_string(astring) :
+
+    int_string_list = astring.strip().split()
+
+    int_list = []
+    for int_string in int_string_list :
+      try :
+         int_value = int(int_string)
+      except ValueError as ex :
+         print('"%s" cannot be converted to an int: %s' % (int_string, ex))
+         return []
+      int_list.append(int_value)
+
+    return int_list
+
+# end function: get_ints_from_string
+
+# -----------------------------------------------------------------
+
+# ======================================================================================
 
 def top_menu() :
     """ Top text menu of the pycnumanal application
