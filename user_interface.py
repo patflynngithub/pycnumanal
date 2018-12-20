@@ -63,7 +63,12 @@
 #                          - added code and rearranged the logic to better handle chosen
 #                            programs that have no timings
 #
-#    12/13/2018 (pf)   - added get_ints_from_string()
+#    12/19/2018 (pf)   - added get_ints_from_input() to handle the input of 
+#                        multiple intetgers in one input string
+#                            - modified top_menu() to use it
+#                            - modified choose_program() to use it
+#                            - modified generate_and_add_timings() to use it
+#                            - modified plot_timings() to use it
 #
 # (pf) Patrick Flynn
 #
@@ -76,22 +81,28 @@ import matplotlib.pyplot as plt
 #    Utility functions
 #
 
-def get_ints_from_string(astring) :
+def get_ints_from_input(prompt) :
+    """ Prompts for an input string of integers and returns a list of integers
 
-    int_string_list = astring.strip().split()
+        In:  prompt    - the prompt for the input
+        Out: ints_list - list of integers input by the user (could be an empty list)
+    """
 
-    int_list = []
-    for int_string in int_string_list :
+    ints_string = input(prompt)
+    ints_string_list = ints_string.strip().split()
+
+    ints_list = []
+    for int_string in ints_string_list :
       try :
          int_value = int(int_string)
       except ValueError as ex :
-         print('"%s" cannot be converted to an int: %s' % (int_string, ex))
+         print('Error: "%s" cannot be converted to an integer!' % (int_string))
          return []
-      int_list.append(int_value)
+      ints_list.append(int_value)
 
-    return int_list
+    return ints_list
 
-# end function: get_ints_from_string
+# end function: get_ints_from_input
 
 # -----------------------------------------------------------------
 
@@ -115,35 +126,41 @@ def top_menu() :
         print("(7) Plot timings for programs")
         print("")
 
-        selection = input("Enter selection number (0 to exit) : ")
+        # user inputs the menu option
+        selection = get_ints_from_input("Enter selection number (0 to exit) : ")
 
-        if selection == "0" :    # exit program
+        if selection == [] :  # no input
+            continue
+
+        selection = selection[0]
+
+        if selection == 0 :    # exit program
             print()
             return
-
-        elif selection == "1" :  # add a program
+        
+        elif selection == 1 :  # add a program
             add_program()
 
-        elif selection == "2" :  # display all programs
+        elif selection == 2 :  # display all programs
             display_programs()
 
-        elif selection == "3" :  # manually add timings for a program
+        elif selection == 3 :  # manually add timings for a program
             manually_add_timings()
 
-        elif selection == "4" :  # automatically generate and add timings 
+        elif selection == 4 :  # automatically generate and add timings 
                                  # for a program
             generate_and_add_timings()
 
-        elif selection == "5" :  # display a program's timings
+        elif selection == 5 :  # display a program's timings
             choose_program_and_display_timings()
 
-        elif selection == "6" :  # delete all of a program's timings
+        elif selection == 6 :  # delete all of a program's timings
             delete_program_timings()
             
-        elif selection == "7" :  # plot timings for program(s)
+        elif selection == 7 :  # plot timings for program(s)
             plot_timings()
 
-        else : 
+        else :                 # bad entry
             print("\nBAD ENTRY!")
 
 # end function: top_menu
@@ -198,11 +215,18 @@ def choose_program() :
         prog_name = ""  # empty string is indicator that no programs found
     else :
         # choose the program
-        prog_num = int( input("Choose the program #: "))
-
-        # extract desired information for chosen program
-        prog_info = progs[prog_num-1]
-        prog_name = prog_info[0]
+        prog_num = get_ints_from_input("Choose the program #: ")
+        if prog_num == [] or len(prog_num) > 1 :
+            prog_name = ""
+        else :
+            prog_num = prog_num[0]
+            # is program # in the correct range? (1 - # of programs)
+            if prog_num < 1 or prog_num > len(progs) :
+                prog_name = ""
+            else :
+                # extract desired information for chosen program
+                prog_info = progs[prog_num-1]
+                prog_name = prog_info[0]
         
     return prog_name
 
@@ -315,17 +339,15 @@ def generate_and_add_timings() :
         print()
             
         # user inputs the program sizes to generate timings for
-        prob_sizes_input = input("Enter problem sizes to generate timings for (e.g., 10 20 30 40): ")
-        prob_sizes_input = prob_sizes_input.strip()
+        prob_sizes_list = get_ints_from_input("Enter problem sizes to generate timings for (e.g., 10 20 30 40): ")
 
-        # check if user entered anything
-        if prob_sizes_input == "" :
+        # check if user entered anything or there was an input error
+        if prob_sizes_list == [] :
             return
         else :
-            prob_sizes = prob_sizes_input.split()
-            for prob_size_string in prob_sizes :
-                timing = main.generate_and_add_timing(prog_name, int(prob_size_string))
-                print("Timing for problem size {} = {:>.6f} seconds".format(prob_size_string, timing))
+            for prob_size in prob_sizes_list :
+                timing = main.generate_and_add_timing(prog_name, prob_size)
+                print("Timing for problem size {} = {:>.6f} seconds".format(prob_size, timing))
             print()
                 
 # end function: generate_and_add_timings
@@ -397,21 +419,24 @@ def plot_timings() :
     print()
 
     # user inputs the program #'s to plot timings for
-    prog_nums_string = input("Enter program #'s to plot timings for (e.g., 2 3 4): ")
-    prog_nums_string = prog_nums_string.strip()
+    prog_nums_list = get_ints_from_input("Enter program #'s to plot timings for (e.g., 2 3 4): ")
 
     # check if user entered anything
-    if prog_nums_string == "" :
+    if prog_nums_list == [] :
         return
     else :
-        prog_nums = [ int(x) for x in prog_nums_string.split() ]
         
         # looping through chosen programs to make sure have at least
         # one set of program timings to plot
         prog_names = []
         progs_timing_info = []
-        for prog_num in prog_nums :
+        for prog_num in prog_nums_list :
 
+            # is program # in the correct range? (1 - # of programs)
+            if prog_num < 1 or prog_num > len(progs) :
+                print("{} is not a valid program #".format(prog_num))
+                continue
+            
             # get current program's program name
             prog_info = progs[prog_num-1]
             prog_name = prog_info[0]
@@ -437,7 +462,7 @@ def plot_timings() :
             title = 'Timings vs Problem Size'
             fig.canvas.set_window_title(title) 
 
-            # plotting the timing curves
+            # plotting the timing curves for the cosen programs
             for timings_info in progs_timing_info :
                 # organize current program's timings info for plotting
                 sizes   = [timing[0] for timing in timings_info]
