@@ -3,7 +3,8 @@
 #    VERSION 0.13
 #
 #    - create database/tables if they don't already exist
-#    - add programs to the database
+#    - add program to the database
+#    - delete program from the database (and its timings)
 #    - display programs in the database
 #    - manually enter timings for a program
 #    - generate/store timings for a program
@@ -45,6 +46,10 @@
 #                      - professionalized the commenting
 #                          - pycnumanal-lessons version has more commenting for the student
 #
+#    12/20/2018 (pf)   - added delete_program()
+#                      - modified create_db_connection() to support cascase deletion
+#                          - conn.execute("PRAGMA foreign_keys = ON")
+#
 # (pf) Patrick Flynn
 #
 # ---------------------------------------------------------
@@ -82,7 +87,10 @@ def create_db_connection(db_filename, schema_filename) :
 
         else :  # database file already exists
             print('Database exists, assuming contains proper table structures.')
-    
+ 
+        # needed to support cascade deletion
+        conn.execute("PRAGMA foreign_keys = ON")
+        
 # end program
 
 # -----------------------------------------------------------------
@@ -122,6 +130,24 @@ def add_program(prog_name, prog_desc, cmd_line_prefix) :
     conn.commit()
 
 # end function: add_program
+
+# -----------------------------------------------------------------
+
+def delete_program(prog_name) :
+    """ Delete a program from the database
+
+        In:  prog_name - program name (string)
+        Out: nothing
+    """
+
+    cur = conn.cursor()
+
+    cur.execute("DELETE FROM programs WHERE program_name = ?",
+                (prog_name,) )
+
+    conn.commit()
+
+# end function: delete_program
 
 # -----------------------------------------------------------------
 

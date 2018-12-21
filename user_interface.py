@@ -5,6 +5,7 @@
 #    - text-based menus for:
 #
 #         - add a program to the database
+#         - delete a program from the database (and its timings)
 #         - display programs in the database
 #         - manually enter timings for a program
 #         - generate/store timings for a program
@@ -70,6 +71,12 @@
 #                            - modified generate_and_add_timings() to use it
 #                            - modified plot_timings() to use it
 #
+#    12/20/2018 (pf)   - improved add_program()'s handling of user input, allowing cancellation
+#                        of input
+#                      - added delete_program()
+#                      - improved some comments
+#                      - plot_timings() now checks if any programs found
+#
 # (pf) Patrick Flynn
 #
 # ======================================================================================
@@ -118,12 +125,13 @@ def top_menu() :
     while 1 :
         print("")
         print("(1) Add a program to the database")
-        print("(2) Display all programs in the database")
-        print("(3) Manually add a program's timings to the database")
-        print("(4) Automatically generate and add a program's timings to the database")
-        print("(5) Display a program's timings in the database")
-        print("(6) Delete all of a program's timings")
-        print("(7) Plot timings for programs")
+        print("(2) Delete a program from the database")
+        print("(3) Display all programs in the database")
+        print("(4) Manually add a program's timings to the database")
+        print("(5) Automatically generate and add a program's timings to the database")
+        print("(6) Display a program's timings in the database")
+        print("(7) Delete all of a program's timings")
+        print("(8) Plot timings for programs")
         print("")
 
         # user inputs the menu option
@@ -141,23 +149,26 @@ def top_menu() :
         elif selection == 1 :  # add a program
             add_program()
 
-        elif selection == 2 :  # display all programs
+        elif selection == 2 :  # delete a program (and its timings)
+            delete_program()
+
+        elif selection == 3 :  # display all programs
             display_programs()
 
-        elif selection == 3 :  # manually add timings for a program
+        elif selection == 4 :  # manually add timings for a program
             manually_add_timings()
 
-        elif selection == 4 :  # automatically generate and add timings 
+        elif selection == 5 :  # automatically generate and add timings 
                                  # for a program
             generate_and_add_timings()
 
-        elif selection == 5 :  # display a program's timings
+        elif selection == 6 :  # display a program's timings
             choose_program_and_display_timings()
 
-        elif selection == 6 :  # delete all of a program's timings
+        elif selection == 7 :  # delete all of a program's timings
             delete_program_timings()
             
-        elif selection == 7 :  # plot timings for program(s)
+        elif selection == 8 :  # plot timings for program(s)
             plot_timings()
 
         else :                 # bad entry
@@ -216,6 +227,7 @@ def choose_program() :
     else :
         # choose the program
         prog_num = get_ints_from_input("Choose the program #: ")
+        # is it a single program #?
         if prog_num == [] or len(prog_num) > 1 :
             prog_name = ""
         else :
@@ -245,13 +257,38 @@ def add_program() :
     print()
     
     # user inputs new program info
-    prog_name       = input("New program name : ")
-    prog_desc       = input("Description : ")
-    cmd_line_prefix = input("Command line prefix (e.g. \"l2vecnorm\") : ")
+    print("Enter BLANK line to cancel")
+    
+    prog_name       = input("New program name : ").strip()
+    if prog_name == "" : return
+
+    prog_desc       = input("Description : ").strip()
+    if prog_desc == "" : return
+
+    cmd_line_prefix = input("Command line prefix (e.g. \"l2vecnorm\") : ").strip()
+    if cmd_line_prefix == "" : return
 
     main.add_program(prog_name, prog_desc, cmd_line_prefix)
 
 # end function: add_program
+
+# -----------------------------------------------------------------
+def delete_program() :
+    """ Delete a program (and its timings)
+
+        In:  nothing
+        Out: nothing
+    """
+
+    prog_name = choose_program()
+
+    # check if a program was selected
+    if prog_name == "":
+        return
+    else :
+        main.delete_program(prog_name)
+                    
+# end function: delete_program
 
 # -----------------------------------------------------------------
 
@@ -287,7 +324,7 @@ def manually_add_timings() :
 
     prog_name = choose_program()
 
-    # check if any programs were found
+    # check if a program was selected
     if prog_name == "":
         return
     else :
@@ -323,7 +360,7 @@ def generate_and_add_timings() :
 
     prog_name = choose_program()
 
-    # check if any programs were found
+    # check if a program was selected
     if prog_name == "":
         return
     else :
@@ -363,7 +400,7 @@ def choose_program_and_display_timings() :
 
     prog_name = choose_program()
 
-    # check if any programs were found
+    # check if a program was selected
     if prog_name == "":
         return
     else :
@@ -388,7 +425,7 @@ def delete_program_timings() :
 
     prog_name = choose_program()
 
-    # check if any programs were found
+    # check if a program was selected
     if prog_name == "":
         return
     else :
@@ -416,6 +453,7 @@ def plot_timings() :
     """
     
     progs = display_programs()
+    if len(progs) == 0: return
     print()
 
     # user inputs the program #'s to plot timings for

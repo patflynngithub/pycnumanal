@@ -5,7 +5,8 @@
 #    pyc:     Python/C program
 #    numanal: timed numerical analysis routines written in C (could be other languages as well)
 #
-#    - adds programs to the database
+#    - adds program to the database
+#    - delete a program from the database (and its timings)
 #    - displays programs in the database
 #    - manually add program timings to database
 #    - generate/store timings for a program
@@ -57,6 +58,8 @@
 #                      - professionalized the commenting
 #                          - pycnumanal-lessons version has more commenting for the student
 #
+#    12/20/2018 (pf)   - added delete_program()
+#
 # (pf) Patrick Flynn
 #
 # ---------------------------------------------------------
@@ -97,6 +100,19 @@ def add_program(prog_name, prog_desc, cmd_line_prefix) :
     db.add_program(prog_name, prog_desc, cmd_line_prefix)
 
 # end function: add_program
+
+# -----------------------------------------------------------------
+
+def delete_program(prog_name) :   
+    """ Delete a program from the database
+
+        In:  prog_name       - program name (string)
+        Out: nothing
+    """
+
+    db.delete_program(prog_name)
+
+# end function: delete_program
 
 # -----------------------------------------------------------------
 
