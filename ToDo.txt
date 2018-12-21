@@ -1,26 +1,23 @@
 
 (also check list in Lesson13.doc)
 
-- streamline comments to more professional style rather than teaching style
-
-- add delete database entry capability (for programs and timings)
 - add modify database data capability
 
-- add capability to enter multiple numeric entries on one input line
-    - problem sizes for generating timings for a program
-    - progrma #'s for plotting multiple program timings on a single plot
+- more error checking inside Python code
+    - database operations error checking
+    - check for duplicates when adding
+        - new program
+        - new timing
+    - experiment what happens when C numerical code explodes (e.g. n too large or too small)
 
-- add capability to enter multiple different program #'s (to plot timings for on a single plot)
-
-- more error checking on command line parameters
-- more error checking inside c/python code
-- experiment what happens when C numerical code explodes (e.g. n too large or too small)
+- more error checking inside C code
+    - C code command line parameters
 
 - when entering program info (program name, description, command line prefix), prompt with entered info
   to verify correctness
 - GUI menuing system
 
-- l2vecnorm: check for non-positive vector size
+- l2vecnorm C program: check for non-positive vector size
 - improve architecture of C programs
 
 - do Fortan versions of C numerical routines

@@ -77,6 +77,9 @@
 #                      - improved some comments
 #                      - plot_timings() now checks if any programs found
 #
+#    12/21/2018 (pf)   - improved top_menu()'s handling of incorrect menu option user input
+#                      - improved manually_add_timings()'s handling of incorrect menu option user input
+#
 # (pf) Patrick Flynn
 #
 # ======================================================================================
@@ -87,6 +90,8 @@ import matplotlib.pyplot as plt
 #
 #    Utility functions
 #
+
+# -----------------------------------------------------------------
 
 def get_ints_from_input(prompt) :
     """ Prompts for an input string of integers and returns a list of integers
@@ -113,6 +118,33 @@ def get_ints_from_input(prompt) :
 
 # -----------------------------------------------------------------
 
+def get_floats_from_input(prompt) :
+    """ Prompts for an input string of floats and returns a list of floats
+
+        In:  prompt      - the prompt for the input
+        Out: floats_list - list of floats input by the user (could be an empty list)
+    """
+
+    floats_string = input(prompt)
+    floats_string_list = floats_string.strip().split()
+
+    floats_list = []
+    for float_string in floats_string_list :
+      try :
+         float_value = float(float_string)
+      except ValueError as ex :
+         print('Error: "%s" cannot be converted to a float!' % (float_string))
+         return []
+      floats_list.append(float_value)
+
+    return floats_list
+
+# end function: get_floats_from_input
+
+# -----------------------------------------------------------------
+
+
+
 # ======================================================================================
 
 def top_menu() :
@@ -134,13 +166,14 @@ def top_menu() :
         print("(8) Plot timings for programs")
         print("")
 
-        # user inputs the menu option
-        selection = get_ints_from_input("Enter selection number (0 to exit) : ")
+        # user inputs the menu option #
+        selection_list = get_ints_from_input("Enter menu option number (0 to exit) : ")
 
-        if selection == [] :  # no input
+        # check to see if any input or invalid input
+        if selection_list == [] or len(selection_list) > 1 :
             continue
-
-        selection = selection[0]
+        else :
+            selection = selection_list[0]
 
         if selection == 0 :    # exit program
             print()
@@ -159,7 +192,7 @@ def top_menu() :
             manually_add_timings()
 
         elif selection == 5 :  # automatically generate and add timings 
-                                 # for a program
+                               # for a program
             generate_and_add_timings()
 
         elif selection == 6 :  # display a program's timings
@@ -216,6 +249,7 @@ def choose_program() :
 
         In:  nothing
         Out: prog_name - name of chosen program
+             (return "" means no program chosen, for whatever reason)
     """
 
     progs = display_programs()
@@ -269,6 +303,8 @@ def add_program() :
     if cmd_line_prefix == "" : return
 
     main.add_program(prog_name, prog_desc, cmd_line_prefix)
+    print()
+    print("Program \"{}\" added.".format(prog_name))
 
 # end function: add_program
 
@@ -287,7 +323,9 @@ def delete_program() :
         return
     else :
         main.delete_program(prog_name)
-                    
+        print()
+        print("Program \"{}\" deleted.".format(prog_name))
+        
 # end function: delete_program
 
 # -----------------------------------------------------------------
@@ -324,7 +362,7 @@ def manually_add_timings() :
 
     prog_name = choose_program()
 
-    # check if a program was selected
+    # check if a program was chosen
     if prog_name == "":
         return
     else :
@@ -340,12 +378,29 @@ def manually_add_timings() :
         while 1 :
             # user manually inputs a new program size amd timing for the program
             print()
-            prob_size = int( input("Enter problem size (positive integer, 0 to exit) : ") )
-            if prob_size == 0 :
-                break
+
+            prob_size_list = get_ints_from_input("Enter a new problem size (positive integer, BLANK line to exit) : ")
+
+            # check if user entered anything, there was an input error,
+            # or more than one program # was entered
+            if prob_size_list == [] or len(prob_size_list) > 1 :
+                return
+            elif prob_size_list[0] <= 0 :
+                print("Problem size needs to be > 0")
+                return
             else :
-                timing    = float( input("Enter timing (nonnegative decimal) : ") )
-                main.add_timing(prog_name, prob_size, timing)
+                timing_list = get_floats_from_input("Enter a timing (nonnegative decimal, BLANK line to exit) : ")
+                
+                # check if user entered anything, there was an input error,
+                # or more than one timing was entered
+                if timing_list == [] or len(timing_list) > 1 :
+                    return
+                elif timing_list[0] < 0 :
+                    print("Timing needs to be >= 0")
+                    return                
+                else :
+                    main.add_timing(prog_name, prob_size_list[0], timing_list[0])
+                    print("Timing manually added to database")
 
 # end function: manually_add_timings
 
@@ -376,7 +431,7 @@ def generate_and_add_timings() :
         print()
             
         # user inputs the program sizes to generate timings for
-        prob_sizes_list = get_ints_from_input("Enter problem sizes to generate timings for (e.g., 10 20 30 40): ")
+        prob_sizes_list = get_ints_from_input("Enter problem sizes to generate timings for (e.g., 10 20 30 40, BLANK to cancel): ")
 
         # check if user entered anything or there was an input error
         if prob_sizes_list == [] :
@@ -459,7 +514,7 @@ def plot_timings() :
     # user inputs the program #'s to plot timings for
     prog_nums_list = get_ints_from_input("Enter program #'s to plot timings for (e.g., 2 3 4): ")
 
-    # check if user entered anything
+    # check for blank entry or incorrect input
     if prog_nums_list == [] :
         return
     else :
@@ -485,7 +540,7 @@ def plot_timings() :
             if len(timings_info) == 0 :
                 print("Program {} (#{}) has no timings".format(prog_name, prog_num))
             else :
-                # add current program's name and timings to prog_names and progs_timing_info;
+                # add current program's name and timings to prog_names and progs_timing_info,
                 # thus indicating that the current program has timings
                 prog_names.append(prog_name)
                 progs_timing_info.append(timings_info)
@@ -500,7 +555,7 @@ def plot_timings() :
             title = 'Timings vs Problem Size'
             fig.canvas.set_window_title(title) 
 
-            # plotting the timing curves for the cosen programs
+            # plotting the timing curves for the chosen programs
             for timings_info in progs_timing_info :
                 # organize current program's timings info for plotting
                 sizes   = [timing[0] for timing in timings_info]
