@@ -85,10 +85,16 @@
 #                      - choose_program(): added print statement about entering invalid program #
 #                      - plot_timings(): added logic to check for valid problem sizes (> 0)
 #
+#    12/21/2018 (pf)   - added checking for existence of executable external program:
+#                           - add_program()
+#                           - generate_and_add_timings()
+#
 # (pf) Patrick Flynn
 #
 # ======================================================================================
 
+#standard modules
+import os
 import matplotlib.pyplot as plt
 
 # ======================================================================================
@@ -316,6 +322,11 @@ def add_program() :
 
     cmd_line_prefix = input("Command line prefix (e.g. \"l2vecnorm\") : ").strip()
     if cmd_line_prefix == "" : return
+    else:
+        filepath = './' + cmd_line_prefix
+        if not os.path.isfile(filepath) :
+            print("That file doesn't exist in current directory!")
+            return
 
     main.add_program(prog_name, prog_desc, cmd_line_prefix)
     print()
@@ -434,9 +445,16 @@ def generate_and_add_timings() :
     if prog_name == "":
         return
     else :
+        # check if external executable program exists in current directory
+        cmd_line_prefix = main.get_cmd_line_prefix(prog_name)
+        filepath = './' + cmd_line_prefix
+        if not os.path.isfile(filepath) :
+            print("The \"{}\" external executable file doesn't exist in current directory!".format(cmd_line_prefix))
+            return
+        
         timings  = main.get_timings(prog_name)
         
-        # check if any timings were found
+        # check if any timings were found for the program
         if len(timings) == 0 :
             print()
             print(prog_name, "has no timings in database")

@@ -60,6 +60,8 @@
 #
 #    12/20/2018 (pf)   - added delete_program()
 #
+#    12/22/2018 (pf)   - added get_cmd_line_prefix()
+#
 # (pf) Patrick Flynn
 #
 # ---------------------------------------------------------
@@ -70,6 +72,21 @@ import os
 # custom modules
 import database as db
 import user_interface as ui
+
+# -----------------------------------------------------------------
+
+def get_cmd_line_prefix(prog_name) :
+    """ Get a program's command line prefix from the database
+
+        In:  prog_name       - name of the program getting timings for (string)
+        Out: cmd_line_prefix - the program's command line prefix
+    """
+
+    cmd_line_prefix = db.get_cmd_line_prefix(prog_name)
+    
+    return cmd_line_prefix
+
+# end function: get_cmd_line_prefix
 
 # -----------------------------------------------------------------
 
