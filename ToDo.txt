@@ -9,7 +9,8 @@
         - new program
         - new timing
     - experiment what happens when C numerical code explodes (e.g. n too large or too small)
-    - check to make sure command line prefix program exists
+    - check to make sure command line prefix program exists when entering program and
+      when generating a timing
 
 - more error checking inside C code
     - C code command line parameters
