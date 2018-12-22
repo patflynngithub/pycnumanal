@@ -18,7 +18,7 @@
 #    - Python 3.x (not tested with Python 2.x)
 #    - text-based interface
 #    - SQlite (sqlite3) database used for storage
-#    - very little error checking
+#    - no database operations error checking (as of yet)
 #
 # --------------------------------------------------------
 #

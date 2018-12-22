@@ -7,3 +7,5 @@ A Python/SQL program that, choosing from a collection of C numerical analysis pr
 
 - pycnumanal.py is the master Python file
 
+- see instructions.txt to run it
+

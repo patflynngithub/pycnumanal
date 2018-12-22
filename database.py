@@ -15,7 +15,7 @@
 #    - runs on Linux (not tested on Windows)
 #    - Python 3.x (not tested with Python 2.x)
 #    - SQlite (sqlite3) database used for storage
-#    - no error checking
+#    - no database operations error checking (as of yet)
 #
 # --------------------------------------------------------
 #
