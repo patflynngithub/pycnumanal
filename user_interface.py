@@ -89,13 +89,19 @@
 #                           - add_program()
 #                           - generate_and_add_timings()
 #
+#    12/22/2018 (pf)   - started process of adding database exception handling
+#                           - display_programs()
+#
 # (pf) Patrick Flynn
 #
 # ======================================================================================
 
-#standard modules
+# standard modules
 import os
 import matplotlib.pyplot as plt
+
+# custom modules
+import db_exceptions as dbe
 
 # ======================================================================================
 #
@@ -237,7 +243,14 @@ def display_programs() :
         Out: progs - all programs in database (list of tuples)
     """
 
-    progs = main.get_programs()
+    try :
+        progs = main.get_programs()
+    except dbe.DB_Error as inst :
+        print("**************")
+        print(inst)
+        print("**************")
+        return []
+    
     print()
 
     # check if any programs were found

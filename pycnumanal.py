@@ -66,7 +66,7 @@
 #
 # ---------------------------------------------------------
 
-#standard modules
+# standard modules
 import os
 
 # custom modules

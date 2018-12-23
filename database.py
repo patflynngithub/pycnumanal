@@ -50,12 +50,19 @@
 #                      - modified create_db_connection() to support cascase deletion
 #                          - conn.execute("PRAGMA foreign_keys = ON")
 #
+#    12/22/2018 (pf)   - started process of adding exception handling to database functions
+#                           - get_programs()
+#
 # (pf) Patrick Flynn
 #
 # ---------------------------------------------------------
 
+# standard modules
 import os
 import sqlite3 as sql
+
+# custom modules
+import db_exceptions as dbe
 
 # -----------------------------------------------------------------
 
@@ -100,11 +107,18 @@ def get_programs() :
 
         In:  nothing
         Out: progs - all programs in database (list of tuples)
+        
+        Exceptions generated:
+            - dbe.DB_Error
     """
 
-    cur = conn.cursor()
+    try :
+        cur = conn.cursor()
+        cur.execute("SELECT program_name, description, cmd_line_prefix FROM programs")
 
-    cur.execute("SELECT program_name, description, cmd_line_prefix FROM programs")    
+    except sql.Error as inst :
+        raise dbe.DB_Error("Error getting programs from the database: get_programs()",inst)
+    
     progs  = cur.fetchall()
 
     return progs
