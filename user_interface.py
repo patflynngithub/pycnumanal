@@ -98,7 +98,9 @@
 
 # standard modules
 import os
+import sys
 import matplotlib.pyplot as plt
+#import traceback
 
 # custom modules
 import db_exceptions as dbe
@@ -245,10 +247,9 @@ def display_programs() :
 
     try :
         progs = main.get_programs()
-    except dbe.DB_Error as inst :
-        print("**************")
-        print(inst)
-        print("**************")
+    except dbe.DB_Error as e :
+        print(e)
+        # print(traceback.format_exc())
         return []
     
     print()

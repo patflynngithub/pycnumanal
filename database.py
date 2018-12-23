@@ -115,9 +115,8 @@ def get_programs() :
     try :
         cur = conn.cursor()
         cur.execute("SELECT program_name, description, cmd_line_prefix FROM programs")
-
-    except sql.Error as inst :
-        raise dbe.DB_Error("Error getting programs from the database: get_programs()",inst)
+    except sql.Error as e :
+        raise dbe.DB_Error("Error getting programs from the database: get_programs()") from e
     
     progs  = cur.fetchall()
 
