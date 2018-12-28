@@ -62,6 +62,8 @@
 #
 #    12/22/2018 (pf)   - added get_cmd_line_prefix()
 #
+#    12/27/2018 (pf)   - added get_program_info_from_DB()
+#
 # (pf) Patrick Flynn
 #
 # ---------------------------------------------------------
@@ -72,6 +74,21 @@ import os
 # custom modules
 import database as db
 import user_interface as ui
+
+# -----------------------------------------------------------------
+
+def get_program_info_from_DB(prog_name) :
+    """ Get a program's info from the database
+
+        In:  prog_name - name of the program getting info for (string)
+        Out: prog_info - program info for the given program (list of 3-tuples)
+    """
+
+    prog_info = db.get_program_info_from_DB(prog_name)
+    
+    return prog_info
+
+# end function: get_program_info_from_DB
 
 # -----------------------------------------------------------------
 

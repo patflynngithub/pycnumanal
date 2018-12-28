@@ -53,6 +53,8 @@
 #    12/22/2018 (pf)   - started process of adding exception handling to database functions
 #                           - get_programs()
 #
+#    12/27/2018 (pf)   - added get_program_info_from_DB()
+#
 # (pf) Patrick Flynn
 #
 # ---------------------------------------------------------
@@ -99,6 +101,44 @@ def create_db_connection(db_filename, schema_filename) :
         conn.execute("PRAGMA foreign_keys = ON")
         
 # end program
+
+# -----------------------------------------------------------------
+
+def get_program_info_from_DB(prog_name) :
+    """ Get a program's info from the database
+
+        In:  prog_name - name of the program getting info for (string)
+        Out: prog_info - program info for the given program (list of 3-tuples)
+    """
+
+    cur = conn.cursor()
+
+    cur.execute("SELECT * FROM programs WHERE program_name = ?",
+                (prog_name,) )
+    prog_info = cur.fetchall()
+    
+    return prog_info
+
+# end function: get_program_info_from_DB
+
+# -----------------------------------------------------------------
+
+def get_cmd_line_prefix(prog_name) :
+    """ Get a program's command line prefix from the database
+
+        In:  prog_name       - name of the program getting timings for (string)
+        Out: cmd_line_prefix - the program's command line prefix
+    """
+    
+    cur = conn.cursor()
+
+    cur.execute("SELECT cmd_line_prefix FROM programs WHERE program_name = ?",
+                (prog_name,) )    
+    cmd_line_prefix = cur.fetchall()[0][0]
+    
+    return cmd_line_prefix
+
+# end function: get_cmd_line_prefix
 
 # -----------------------------------------------------------------
 
@@ -218,25 +258,6 @@ def delete_program_timings(prog_name) :
     conn.commit()
 
 # end function: delete_program_timings
-
-# -----------------------------------------------------------------
-
-def get_cmd_line_prefix(prog_name) :
-    """ Get a program's command line prefix from the database
-
-        In:  prog_name       - name of the program getting timings for (string)
-        Out: cmd_line_prefix - the program's command line prefix
-    """
-    
-    cur = conn.cursor()
-
-    cur.execute("SELECT cmd_line_prefix FROM programs WHERE program_name = ?",
-                (prog_name,) )    
-    cmd_line_prefix = cur.fetchall()[0][0]
-    
-    return cmd_line_prefix
-
-# end function: get_cmd_line_prefix
 
 # -----------------------------------------------------------------
 

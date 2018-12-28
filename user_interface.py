@@ -92,6 +92,15 @@
 #    12/22/2018 (pf)   - started process of adding database exception handling
 #                           - display_programs()
 #
+#    12/27/2018 (pf)   - modified add_program()
+#                           - logic to check if program already in database
+#                      - added prob_size_in_list()
+#                           - determines if a problem size is already in a program's list of timings
+#                      - modified generate_and_add_timings()
+#                           - logic to check if problem size already in database for a program
+#                      - modified manually_add_timings()
+#                           - logic to check if problem size already in database for a program
+#
 # (pf) Patrick Flynn
 #
 # ======================================================================================
@@ -163,6 +172,25 @@ def get_floats_from_input(prompt) :
     return floats_list
 
 # end function: get_floats_from_input
+
+# -----------------------------------------------------------------
+
+def prob_size_in_list(prob_size, timings) :
+    """ Checks if problem size is in timings for a program
+
+        In:  prob_size  - a problem size
+             timings    - the timings info for a program
+        Out: True/False - problem size found in timings?
+
+    """
+
+    for timing_info in timings :
+        if (timing_info[0] == prob_size) :
+            return True
+
+    return False
+
+# end function: prob_size_in_list
 
 # -----------------------------------------------------------------
 
@@ -331,6 +359,15 @@ def add_program() :
     prog_name       = input("New program name : ").strip()
     if prog_name == "" : return
 
+    # is program already in database?
+    prog_info = main.get_program_info_from_DB(prog_name)
+    if len(prog_info) > 0 :
+        print("Program is already in database")
+        print("Program : ", prog_info[0][0])
+        print("Description : ", prog_info[0][1])
+        print("Command line prefix : ", prog_info[0][2])
+        return
+
     prog_desc       = input("Description : ").strip()
     if prog_desc == "" : return
 
@@ -339,7 +376,7 @@ def add_program() :
     else:
         filepath = './' + cmd_line_prefix
         if not os.path.isfile(filepath) :
-            print("That file doesn't exist in current directory!")
+            print("That executable file doesn't exist in current directory!")
             return
 
     main.add_program(prog_name, prog_desc, cmd_line_prefix)
@@ -429,6 +466,13 @@ def manually_add_timings() :
                 print("Problem size needs to be > 0")
                 return
             else :
+                prob_size = prob_size_list[0]
+
+                # is problem size already in database for the chosen program?
+                if prob_size_in_list(prob_size, timings) :
+                    print("Problem size already in database for the chosen program")
+                    continue
+                
                 timing_list = get_floats_from_input("Enter a timing (nonnegative decimal, BLANK line to exit) : ")
                 
                 # check if user entered anything, there was an input error,
@@ -439,8 +483,8 @@ def manually_add_timings() :
                     print("Timing needs to be >= 0")
                     return                
                 else :
-                    main.add_timing(prog_name, prob_size_list[0], timing_list[0])
-                    print("Timing manually added to database")
+                    main.add_timing(prog_name, prob_size, timing_list[0])
+                    print("Timing added to database")
 
 # end function: manually_add_timings
 
@@ -488,6 +532,11 @@ def generate_and_add_timings() :
                 if prob_size <= 0 :
                     print("Problem size of {} is invalid".format(prob_size,))
                 else :
+                    # is problem size already in database for the chosen program?
+                    if prob_size_in_list(prob_size, timings) :
+                        print("Problem size {} already in database for the chosen program. SKIPPING".format(prob_size))
+                        continue
+                    
                     timing = main.generate_and_add_timing(prog_name, prob_size)
                     print("Timing for problem size {} = {:>.6f} seconds".format(prob_size, timing))
             print()
