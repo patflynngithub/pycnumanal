@@ -101,6 +101,10 @@
 #                      - modified manually_add_timings()
 #                           - logic to check if problem size already in database for a program
 #
+#    12/28/2018 (pf)   - added yes_or_no()
+#                      - modified add_program()
+#                           - allow adding of a program even if its executable isn't in current directory
+#
 # (pf) Patrick Flynn
 #
 # ======================================================================================
@@ -119,6 +123,28 @@ import db_exceptions as dbe
 #    Utility functions
 #
 # ======================================================================================
+
+
+# -----------------------------------------------------------------
+
+def yes_or_no(prompt):
+    """ Prompts for a yes or no answer
+
+        In:  prompt     - the prompt for the yes/no input
+        Out: True/False - is answer a yes?
+    """
+
+    answer = input(prompt + "(y/n): ").lower().strip()
+    while not(answer == "y" or answer == "yes" or answer == "n" or answer == "no"):
+        print("")
+        print("Input yes or no")
+        answer = input(prompt + "(y/n):").lower().strip()
+    if answer[0] == "y":
+        return True
+    else:
+        return False
+
+# end function: yes_or_no
 
 # -----------------------------------------------------------------
 
@@ -352,40 +378,48 @@ def add_program() :
 
     display_programs()
     print()
+
+    # loop in case of attempt to enter a duplicate program
+    while 1 :
     
-    # user inputs new program info
-    print("Enter BLANK line to cancel")
-    
-    prog_name       = input("New program name : ").strip()
-    if prog_name == "" : return
+        # user inputing new program info
+        print("Enter BLANK line to cancel")        
+        prog_name       = input("New program name : ").strip()
+        if prog_name == "" : return
 
-    # is program already in database?
-    prog_info = main.get_program_info_from_DB(prog_name)
-    if len(prog_info) > 0 :
-        print("Program is already in database")
-        print("Program : ", prog_info[0][0])
-        print("Description : ", prog_info[0][1])
-        print("Command line prefix : ", prog_info[0][2])
-        return
+        # is program already in the database?
+        prog_info = main.get_program_info_from_DB(prog_name)
+        if len(prog_info) > 0 :
+            print("PROGRAM IS ALREADY IN THE DATABASE")
+            print("Program : ", prog_info[0][0])
+            print("Description : ", prog_info[0][1])
+            print("Command line prefix : ", prog_info[0][2])
+            print()
+            continue
 
-    prog_desc       = input("Description : ").strip()
-    if prog_desc == "" : return
+        prog_desc       = input("Description : ").strip()
+        if prog_desc == "" : return
 
-    cmd_line_prefix = input("Command line prefix (e.g. \"l2vecnorm\") : ").strip()
-    if cmd_line_prefix == "" : return
-    else:
-        filepath = './' + cmd_line_prefix
-        if not os.path.isfile(filepath) :
-            print("That executable file doesn't exist in current directory!")
-            return
+        cmd_line_prefix = input("Command line prefix (e.g. \"l2vecnorm\") : ").strip()
+        if cmd_line_prefix == "" : return
+        else:
+            # see if there is an executable file of that name
+            filepath = './' + cmd_line_prefix
+            if not os.path.isfile(filepath) :
+                print("That executable file doesn't exist in current directory!")
+                if not yes_or_no("Do you want to add the program anyway?") :
+                    return
 
-    main.add_program(prog_name, prog_desc, cmd_line_prefix)
-    print()
-    print("Program \"{}\" added.".format(prog_name))
+        main.add_program(prog_name, prog_desc, cmd_line_prefix)
+        print()
+        print("Program \"{}\" added.".format(prog_name))
+        
+        break
 
 # end function: add_program
 
 # -----------------------------------------------------------------
+
 def delete_program() :
     """ Delete a program (and its timings)
 
