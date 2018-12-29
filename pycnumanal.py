@@ -64,6 +64,12 @@
 #
 #    12/27/2018 (pf)   - added get_program_info_from_DB()
 #
+#    12/29/2018 (pf)   - changed name of get_program_info_from_DB() to get_program_info()
+#                      - modified get_program_info()
+#                           - accomodating change in db.get_program_info() that does following
+#                               - returning discrete values rather than a position-dependent list
+#                               - avoids calling modules having to know order of elements in a list
+#
 # (pf) Patrick Flynn
 #
 # ---------------------------------------------------------
@@ -77,18 +83,20 @@ import user_interface as ui
 
 # -----------------------------------------------------------------
 
-def get_program_info_from_DB(prog_name) :
+def get_program_info(prog_name) :
     """ Get a program's info from the database
 
-        In:  prog_name - name of the program getting info for (string)
-        Out: prog_info - program info for the given program (list of 3-tuples)
+        In:  prog_name  - name of the program getting info for (string)
+        Out: prog_name2      - retrieved program name (string)
+             prog_desc       - retrieved program description (string)
+             cmd_line_prefix - retrieved command line prefix (string)
     """
 
-    prog_info = db.get_program_info_from_DB(prog_name)
+    [prog_name2, prog_desc, cmd_line_prefix] = db.get_program_info(prog_name)
     
-    return prog_info
+    return [prog_name2, prog_desc, cmd_line_prefix]
 
-# end function: get_program_info_from_DB
+# end function: get_program_info
 
 # -----------------------------------------------------------------
 

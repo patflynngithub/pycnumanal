@@ -105,6 +105,12 @@
 #                      - modified add_program()
 #                           - allow adding of a program even if its executable isn't in current directory
 #
+#    12/29/2018 (pf)   - modified add_program()
+#                           - changed call to get_program_info_from_DB() to get_program_info()
+#                           - accomodated change in main.get_program_info() that does following
+#                               - returning discrete values rather than a position-dependent list
+#                               - avoids calling modules having to know order of elements in a list
+#
 # (pf) Patrick Flynn
 #
 # ======================================================================================
@@ -134,11 +140,11 @@ def yes_or_no(prompt):
         Out: True/False - is answer a yes?
     """
 
-    answer = input(prompt + "(y/n): ").lower().strip()
+    answer = input(prompt + " (y/n): ").lower().strip()
     while not(answer == "y" or answer == "yes" or answer == "n" or answer == "no"):
         print("")
         print("Input yes or no")
-        answer = input(prompt + "(y/n):").lower().strip()
+        answer = input(prompt + " (y/n): ").lower().strip()
     if answer[0] == "y":
         return True
     else:
@@ -384,35 +390,35 @@ def add_program() :
     
         # user inputing new program info
         print("Enter BLANK line to cancel")        
-        prog_name       = input("New program name : ").strip()
-        if prog_name == "" : return
+        new_prog_name       = input("New program name : ").strip()
+        if new_prog_name == "" : return
 
         # is program already in the database?
-        prog_info = main.get_program_info_from_DB(prog_name)
-        if len(prog_info) > 0 :
-            print("PROGRAM IS ALREADY IN THE DATABASE")
-            print("Program : ", prog_info[0][0])
-            print("Description : ", prog_info[0][1])
-            print("Command line prefix : ", prog_info[0][2])
+        [prog_name, prog_desc, cmd_line_prefix] = main.get_program_info(new_prog_name)
+        if len(prog_name) > 0 :
+            print("PROGRAM IS ALREADY IN THE DATABASE. Delete it if want to change its info.")
+            print("Program : ", prog_name)
+            print("Description : ", prog_desc)
+            print("Command line prefix : ", cmd_line_prefix)
             print()
             continue
 
-        prog_desc       = input("Description : ").strip()
-        if prog_desc == "" : return
+        new_prog_desc       = input("Description : ").strip()
+        if new_prog_desc == "" : return
 
-        cmd_line_prefix = input("Command line prefix (e.g. \"l2vecnorm\") : ").strip()
-        if cmd_line_prefix == "" : return
+        new_cmd_line_prefix = input("Command line prefix (e.g. \"l2vecnorm\") : ").strip()
+        if new_cmd_line_prefix == "" : return
         else:
             # see if there is an executable file of that name
-            filepath = './' + cmd_line_prefix
+            filepath = './' + new_cmd_line_prefix
             if not os.path.isfile(filepath) :
                 print("That executable file doesn't exist in current directory!")
                 if not yes_or_no("Do you want to add the program anyway?") :
                     return
 
-        main.add_program(prog_name, prog_desc, cmd_line_prefix)
+        main.add_program(new_prog_name, new_prog_desc, new_cmd_line_prefix)
         print()
-        print("Program \"{}\" added.".format(prog_name))
+        print("Program \"{}\" added.".format(new_prog_name))
         
         break
 
