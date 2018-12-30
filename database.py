@@ -2,16 +2,6 @@
 # 
 #    VERSION 0.13
 #
-#    - create database/tables if they don't already exist
-#    - add program to the database
-#    - delete program from the database (and its timings)
-#    - display programs in the database
-#    - manually enter timings for a program
-#    - generate/store timings for a program
-#    - display timings for a program
-#    - delete all of a program's timings
-#    - plot timings for a program
-#
 #    - runs on Linux (not tested on Windows)
 #    - Python 3.x (not tested with Python 2.x)
 #    - SQlite (sqlite3) database used for storage
@@ -57,14 +47,27 @@
 #
 #    12/29/2018 (pf)   - changed name of get_program_info_from_DB() to get_program_info()
 #                      - modified get_program_info()
-#                           - returning discrete values rather than a position-dependent list
-#                           - avoids calling modules having to know order of elements in a list
+#                           - data is returned with each field's values having their own separate list
+#                             rather than each data row having its own list, which is inside of the overall list
+#                           - avoids calling functions in other modules having to know the order (list indices)
+#                             of entries in a list inside of an overall list
+#
+#    12/30/2018 (pf)   - modified get_programs())
+#                                 get_timings()
+#                           - data is returned with each field's values having their own separate list
+#                             rather than each data row having its own list, which is inside of the overall list
+#                           - avoids calling functions in other modules having to know the order (list indices)
+#                             of entries in a list inside of an overall list
+#                      - added close_db()
+#
 # (pf) Patrick Flynn
 #
 # ---------------------------------------------------------
 
 # standard modules
 import os
+
+# third-party modules
 import sqlite3 as sql
 
 # custom modules
@@ -104,7 +107,20 @@ def create_db_connection(db_filename, schema_filename) :
         # needed to support cascade deletion
         conn.execute("PRAGMA foreign_keys = ON")
         
-# end program
+# end create_db_connection()
+
+# -----------------------------------------------------------------
+
+def close_db() :
+    """ Closes the database connection
+    
+        In:  nothing
+        Out: nothing        
+    """
+
+    conn.close()
+        
+# end close_db()
 
 # -----------------------------------------------------------------
 
@@ -112,27 +128,24 @@ def get_program_info(prog_name) :
     """ Get a program's info from the database
 
         In:  prog_name - name of the program getting info for (string)
-        Out: prog_name2      - retrieved program name (string)
-             prog_desc       - retrieved program description (string)
-             cmd_line_prefix - retrieved command line prefix (string)
+        Out: prog_desc       - program description (string)
+             cmd_line_prefix - command line prefix (string)
     """
 
     cur = conn.cursor()
 
-    cur.execute("""SELECT program_name, description, cmd_line_prefix 
+    cur.execute("""SELECT description, cmd_line_prefix 
                    FROM programs WHERE program_name = ?""", (prog_name,) )
     prog_info = cur.fetchall()
 
-    prog_name2 = ""
     prog_desc = ""
     cmd_line_prefix = ""
     
     if len(prog_info) > 0 :
-        prog_name2 = prog_info[0][0]
-        prog_desc  = prog_info[0][1]
-        cmd_line_prefix = prog_info[0][2]
+        prog_desc  = prog_info[0][0]
+        cmd_line_prefix = prog_info[0][1]
         
-    return [prog_name2, prog_desc, cmd_line_prefix]
+    return [prog_desc, cmd_line_prefix]
 
 # end function: get_program_info
 
@@ -142,13 +155,13 @@ def get_cmd_line_prefix(prog_name) :
     """ Get a program's command line prefix from the database
 
         In:  prog_name       - name of the program getting timings for (string)
-        Out: cmd_line_prefix - the program's command line prefix
+        Out: cmd_line_prefix - the program's command line prefix (string)
     """
     
     cur = conn.cursor()
 
     cur.execute("SELECT cmd_line_prefix FROM programs WHERE program_name = ?",
-                (prog_name,) )    
+                (prog_name,) )
     cmd_line_prefix = cur.fetchall()[0][0]
     
     return cmd_line_prefix
@@ -161,7 +174,9 @@ def get_programs() :
     """ Get all the programs from the database
 
         In:  nothing
-        Out: progs - all programs in database (list of tuples)
+        Out: prog_names        - retrieved program names (list)
+             descriptions      - retrieved program descriptions (list)
+             cmd_line_prefixes - retrieved command line prefixes (list)
         
         Exceptions generated:
             - dbe.DB_Error
@@ -172,10 +187,19 @@ def get_programs() :
         cur.execute("SELECT program_name, description, cmd_line_prefix FROM programs")
     except sql.Error as e :
         raise dbe.DB_Error("Error getting programs from the database: get_programs()") from e
-    
+
     progs  = cur.fetchall()
 
-    return progs
+    prog_names        = []
+    descriptions      = []
+    cmd_line_prefixes = []
+    
+    for prog_info in progs :
+        prog_names.append(prog_info[0])
+        descriptions.append(prog_info[1])
+        cmd_line_prefixes.append(prog_info[2])
+        
+    return [prog_names, descriptions, cmd_line_prefixes]
 
 # end function: get_programs
 
@@ -222,17 +246,26 @@ def delete_program(prog_name) :
 def get_timings(prog_name) :
     """ Get a program's timings from the database
 
-        In:  prog_name - name of the program getting timings for (string)
-        Out: timings   - all timings for the given program (list of 2-tuples)
+        In:  prog_name    - name of the program getting timings for (string)
+        Out: prob_sizes   - all problem sizes for the program (list)
+             timings      - all timings for the program (list)
     """
     
     cur = conn.cursor()
 
     cur.execute("SELECT problem_size, timing FROM timings WHERE program_name = ? ORDER BY problem_size ASC",
                 (prog_name,) )
-    timings = cur.fetchall()
+    timings_info = cur.fetchall()
+    
+    prob_sizes = []
+    timings    = []
 
-    return timings
+    # build up separate problem sizes and timings lists
+    for [prob_size,timing] in timings_info :
+        prob_sizes.append(prob_size)
+        timings.append(timing)
+
+    return [prob_sizes, timings]
 
 # end function: get_timings
 

@@ -105,12 +105,33 @@
 #                      - modified add_program()
 #                           - allow adding of a program even if its executable isn't in current directory
 #
-#    12/29/2018 (pf)   - modified add_program()
-#                           - changed call to get_program_info_from_DB() to get_program_info()
-#                           - accomodated change in main.get_program_info() that does following
-#                               - returning discrete values rather than a position-dependent list
-#                               - avoids calling modules having to know order of elements in a list
+#    12/29/2018 (pf)   - changed name of the function get_program_info_from_DB() to get_program_info()
+#                      - modified add_program()
+#                          - changed call to get_program_info_from_DB() to get_program_info()
+#                          - accomodates modifications to main.get_program_info() (and db.get_program_info())
+#                              - where data is returned from them with each field's values having their own
+#                                separate list rather than each data row having its own list, which is inside
+#                                of an overall list
+#                              - avoids add_program having to know the ordering (list indices) of entries
+#                                in a list inside of the overall list
 #
+#    12/30/2018 (pf)   - deleted prob_size_in_list() utility function
+#                      - modified display_program()
+#                                 choose_program()
+#                                 display_timings()
+#                                 manually_add_timings()
+#                                 generate_and_add_timings()
+#                                 choose_program_and_display_timings()
+#                                 delete_program_timings()
+#                                 plot_timings()
+#                          - accomdates modifications to main.get_programs() (and db.get_programs())
+#                                                        main.get_timings()  (and db.get_timings())
+#                              - where data is returned from them with each field's values having their own
+#                                separate list rather than each data row having its own list, which is inside
+#                                of the overall list
+#                              - avoids the calling functions (listed above) having to know the ordering (list indices)
+#                                of entries in a list inside of an overall list
+#                                 
 # (pf) Patrick Flynn
 #
 # ======================================================================================
@@ -118,8 +139,10 @@
 # standard modules
 import os
 import sys
+
+# third-party modules
 import matplotlib.pyplot as plt
-#import traceback
+#import traceback   (used with "print(traceback.format_exc())")
 
 # custom modules
 import db_exceptions as dbe
@@ -129,7 +152,6 @@ import db_exceptions as dbe
 #    Utility functions
 #
 # ======================================================================================
-
 
 # -----------------------------------------------------------------
 
@@ -207,28 +229,9 @@ def get_floats_from_input(prompt) :
 
 # -----------------------------------------------------------------
 
-def prob_size_in_list(prob_size, timings) :
-    """ Checks if problem size is in timings for a program
-
-        In:  prob_size  - a problem size
-             timings    - the timings info for a program
-        Out: True/False - problem size found in timings?
-
-    """
-
-    for timing_info in timings :
-        if (timing_info[0] == prob_size) :
-            return True
-
-    return False
-
-# end function: prob_size_in_list
-
-# -----------------------------------------------------------------
-
 # ======================================================================================
 #
-#    Core UI functions
+#    Core User Interface functions
 #
 # ======================================================================================
 
@@ -256,7 +259,7 @@ def top_menu() :
         # user inputs the menu option #
         selection_list = get_ints_from_input("Enter menu option number (0 to exit) : ")
 
-        # check to see if any input, input error, or too many inputs
+        # check to see if the required ONE entry was not input or the there was an entry error
         if selection_list == [] or len(selection_list) > 1 :
             continue
         else :
@@ -298,24 +301,26 @@ def top_menu() :
 
 # -----------------------------------------------------------------
 
-def display_programs() :   
+def display_programs() :
     """ Displays all the programs in the database
 
         In:  nothing
-        Out: progs - all programs in database (list of tuples)
+        Out: prog_names        - program names (list)
+             descriptions      - program descriptions (list)
+             cmd_line_prefixes - command line prefixes (list)        
     """
 
     try :
-        progs = main.get_programs()
+        [prog_names, descriptions, cmd_line_prefixes] = main.get_programs()
     except dbe.DB_Error as e :
         print(e)
         # print(traceback.format_exc())
         return []
-    
+
     print()
 
-    # check if any programs were found
-    if len(progs) == 0 :
+    # check if no programs were found
+    if len(prog_names) == 0 :
         print("No programs in database")
     else : # display all programs found
         print
@@ -324,14 +329,12 @@ def display_programs() :
         print("    Name                 Description                    Command line prefix")
         print("    -------------------- ------------------------------ --------------------")
 
-        k = 1
-        for prog_info in progs :
-            print("{:>2d}) {:<20s} {:<30s} {:<20s}".format(k, prog_info[0], prog_info[1], prog_info[2]))
-            k = k + 1
+        for k in range(0,len(prog_names)) :
+            print("{:>2d}) {:<20s} {:<30s} {:<20s}".format(k+1, prog_names[k], descriptions[k], cmd_line_prefixes[k]))
 
         print
 
-    return progs
+    return [prog_names, descriptions, cmd_line_prefixes]
 
 # end function: display_programs
 
@@ -342,32 +345,31 @@ def choose_program() :
 
         In:  nothing
         Out: prog_name - name of chosen program
-             (return "" means no program chosen, for whatever reason)
+             (return "" (empty string) means no program chosen, for whatever reason)
     """
 
-    progs = display_programs()
+    [prog_names, descriptions, cmd_line_prefixes] = display_programs()
     print()
 
-    # check if any programs were found
-    if len(progs) == 0 :
+    # check if no programs were found
+    if len(prog_names) == 0 :
         prog_name = ""  # empty string is indicator that no programs found
     else :
         # choose the program
         prog_num = get_ints_from_input("Choose the program # (BLANK to cancel): ")
         
-        # is it not a single program #?
+        # was the required single program # inputed or was there an entry error?
         if prog_num == [] or len(prog_num) > 1 :
             prog_name = ""
         else :
             prog_num = prog_num[0]
             # is program # not in the correct range? (1 - # of programs)
-            if prog_num < 1 or prog_num > len(progs) :
+            if prog_num < 1 or prog_num > len(prog_names) :
                 prog_name = ""
                 print("Invalid program #")
             else :
-                # extract desired information for chosen program
-                prog_info = progs[prog_num-1]
-                prog_name = prog_info[0]
+                # extract program name for chosen program
+                prog_name = prog_names[prog_num-1]
         
     return prog_name
 
@@ -382,10 +384,10 @@ def add_program() :
         Out: nothing
     """
 
-    display_programs()
+    [prog_names, descriptions, cmd_line_prefixes] = display_programs()
     print()
 
-    # loop in case of attempt to enter a duplicate program
+    # loop in case of attempt to add a duplicate program
     while 1 :
     
         # user inputing new program info
@@ -394,12 +396,12 @@ def add_program() :
         if new_prog_name == "" : return
 
         # is program already in the database?
-        [prog_name, prog_desc, cmd_line_prefix] = main.get_program_info(new_prog_name)
-        if len(prog_name) > 0 :
-            print("PROGRAM IS ALREADY IN THE DATABASE. Delete it if want to change its info.")
-            print("Program : ", prog_name)
-            print("Description : ", prog_desc)
-            print("Command line prefix : ", cmd_line_prefix)
+        if new_prog_name in prog_names :
+            k = prog_names.index(new_prog_name)
+            print("PROGRAM IS ALREADY IN THE DATABASE. Delete it if you want to change its info.")
+            print("Program : ", prog_names[k])
+            print("Description : ", descriptions[k])
+            print("Command line prefix : ", cmd_line_prefixes[k])
             print()
             continue
 
@@ -435,7 +437,7 @@ def delete_program() :
 
     prog_name = choose_program()
 
-    # check if a program was chosen
+    # check if no program was chosen
     if prog_name == "":
         return
     else :
@@ -447,11 +449,12 @@ def delete_program() :
 
 # -----------------------------------------------------------------
 
-def display_timings(prog_name, timings) :
+def display_timings(prog_name, prob_sizes, timings) :
     """ Display all of a program's timings in the database
 
-        In:  prog_name - name of the program displaying timings for (string)
-             timings   - all timings for the given program (list of 2-tuples)
+        In:  prog_name  - name of the program displaying timings for (string)
+             prob_sizes - the program's problems sizes (list)
+             timings    - the program's timings
         Out: nothing
     """
 
@@ -461,8 +464,8 @@ def display_timings(prog_name, timings) :
     print("  Problem size   Timing")
     print("  ------------   ---------------")
 
-    for timing_info in timings :
-        print("  {:<12d}   {:>15.6f}".format(timing_info[0], timing_info[1]))
+    for k in range(0, len(prob_sizes)) :
+        print("  {:<12d}   {:>15.6f}".format(prob_sizes[k], timings[k]))
 
     print()
 
@@ -479,51 +482,49 @@ def manually_add_timings() :
 
     prog_name = choose_program()
 
-    # check if a program was chosen
+    # check if no program was chosen
     if prog_name == "":
         return
     else :
-        timings  = main.get_timings(prog_name)
+        [prob_sizes, timings]  = main.get_timings(prog_name)
         
-        # check if any timings were found
-        if len(timings) == 0 :
+        # check if no timings were found
+        if len(prob_sizes) == 0 :
             print()
             print(prog_name, "has no timings in database")
         else :
-            display_timings(prog_name, timings)
+            display_timings(prog_name, prob_sizes, timings)
 
         # each loop is a manual entry of a program size and its accompanying timing
         while 1 :
             print()
 
-            prob_size_list = get_ints_from_input("Enter a new problem size (positive integer, BLANK line to exit) : ")
+            prob_size_input = get_ints_from_input("Enter a new problem size (positive integer, BLANK line to exit) : ")
 
-            # check if user entered anything, there was an input error,
-            # or more than one program # was entered
-            if prob_size_list == [] or len(prob_size_list) > 1 :
+            # check if user did not enter the required ONE entry or there was an input error
+            if prob_size_input == [] or len(prob_size_input) > 1 :
                 return
-            elif prob_size_list[0] <= 0 :
+            elif prob_size_input[0] <= 0 :
                 print("Problem size needs to be > 0")
                 return
             else :
-                prob_size = prob_size_list[0]
+                prob_size = prob_size_input[0]
 
                 # is problem size already in database for the chosen program?
-                if prob_size_in_list(prob_size, timings) :
+                if prob_size in prob_sizes :
                     print("Problem size already in database for the chosen program")
                     continue
                 
-                timing_list = get_floats_from_input("Enter a timing (nonnegative decimal, BLANK line to exit) : ")
+                timing_input = get_floats_from_input("Enter a timing (nonnegative decimal, BLANK line to exit) : ")
                 
-                # check if user entered anything, there was an input error,
-                # or more than one timing was entered
-                if timing_list == [] or len(timing_list) > 1 :
+                # check if user did not enter the required ONE entry or there was an input error
+                if timing_input == [] or len(timing_input) > 1 :
                     return
-                elif timing_list[0] < 0 :
+                elif timing_input[0] < 0 :
                     print("Timing needs to be >= 0")
                     return                
                 else :
-                    main.add_timing(prog_name, prob_size, timing_list[0])
+                    main.add_timing(prog_name, prob_size, timing_input[0])
                     print("Timing added to database")
 
 # end function: manually_add_timings
@@ -539,7 +540,7 @@ def generate_and_add_timings() :
 
     prog_name = choose_program()
 
-    # check if a program was selected
+    # check if no program was selected
     if prog_name == "":
         return
     else :
@@ -550,30 +551,30 @@ def generate_and_add_timings() :
             print("The \"{}\" external executable file doesn't exist in current directory!".format(cmd_line_prefix))
             return
         
-        timings  = main.get_timings(prog_name)
+        [prob_sizes, timings]  = main.get_timings(prog_name)
         
-        # check if any timings were found for the program
-        if len(timings) == 0 :
+        # check if no timings were found for the program
+        if len(prob_sizes) == 0 :
             print()
             print(prog_name, "has no timings in database")
         else :
-            display_timings(prog_name, timings)
+            display_timings(prog_name, prob_sizes, timings)
 
         print()
             
         # user inputs the program sizes to generate timings for
-        prob_sizes_list = get_ints_from_input("Enter problem sizes to generate timings for (e.g., 10 20 30 40, BLANK to cancel): ")
+        prob_sizes_input = get_ints_from_input("Enter problem sizes to generate timings for (e.g., 10 20 30 40, BLANK to cancel): ")
 
         # check if user entered anything or there was an input error
-        if prob_sizes_list == [] :
+        if prob_sizes_input == [] :
             return
         else :
-            for prob_size in prob_sizes_list :
+            for prob_size in prob_sizes_input :
                 if prob_size <= 0 :
                     print("Problem size of {} is invalid".format(prob_size,))
                 else :
                     # is problem size already in database for the chosen program?
-                    if prob_size_in_list(prob_size, timings) :
+                    if prob_size in prob_sizes :
                         print("Problem size {} already in database for the chosen program. SKIPPING".format(prob_size))
                         continue
                     
@@ -594,18 +595,18 @@ def choose_program_and_display_timings() :
 
     prog_name = choose_program()
 
-    # check if a program was selected
+    # check if no program was selected
     if prog_name == "":
         return
     else :
-        timings  = main.get_timings(prog_name)
+        [prob_sizes, timings]  = main.get_timings(prog_name)
         
-        # check if any timings were found
-        if len(timings) == 0 :
+        # check if no timings were found
+        if len(prob_sizes) == 0 :
             print()
             print(prog_name, "has no timings in database")
         else :
-            display_timings(prog_name, timings)
+            display_timings(prog_name, prob_sizes, timings)
 
 # end function: choose_and_display_timings
 
@@ -619,15 +620,15 @@ def delete_program_timings() :
 
     prog_name = choose_program()
 
-    # check if a program was selected
+    # check if no program was selected
     if prog_name == "":
         return
     else :
         # get timings that are being deleted
-        timings  = main.get_timings(prog_name)
+        [prob_sizes, timings]  = main.get_timings(prog_name)
         
         # check if any timings were found
-        num_timings = len(timings)
+        num_timings = len(prob_sizes)
         if num_timings == 0 :
             print()
             print(prog_name, "has no timings in database")
@@ -646,68 +647,71 @@ def plot_timings() :
         Out: nothing
     """
     
-    progs = display_programs()
-    if len(progs) == 0: return
+    [prog_names, descriptions, cmd_line_prefixes] = display_programs()
+    if len(prog_names) == 0: return
+
     print()
 
     # user inputs the program #'s to plot timings for
-    prog_nums_list = get_ints_from_input("Enter program #'s to plot timings for (e.g., 2 3 4, BLANK to cancel): ")
+    prog_nums_input = get_ints_from_input("Enter program #'s to plot timings for (e.g., 2 3 4, BLANK to cancel): ")
 
     # check for blank entry or input error
-    if prog_nums_list == [] :
+    if prog_nums_input == [] :
         return
     else :
-        
+       
         # looping through chosen programs to make sure have at least
-        # one set of program timings to plot
-        prog_names = []
-        progs_timing_info = []
-        for prog_num in prog_nums_list :
+        # one set of program's timings to plot
+        valid_prog_names   = []
+        valid_prob_sizes   = []
+        valid_prog_timings = []
+        for k in range(0,len(prog_nums_input)) :
 
-            # is program # in the correct range? (1 - # of programs)
-            if prog_num < 1 or prog_num > len(progs) :
+            prog_num = prog_nums_input[k]
+            
+            # is program # in the correct range? (1 - # of overall programs)
+            if prog_num < 1 or prog_num > len(prog_names) :
                 print("{} is not a valid program #".format(prog_num))
                 continue
             
             # get current program's program name
-            prog_info = progs[prog_num-1]
-            prog_name = prog_info[0]
+            prog_name = prog_names[prog_num-1]
             
-            timings_info = main.get_timings(prog_name)
+            # get current program's timings
+            [prob_sizes, timings] = main.get_timings(prog_name)
             
             # check if current program has any timings
-            if len(timings_info) == 0 :
+            if len(prob_sizes) == 0 :
                 print("Program {} (#{}) has no timings".format(prog_name, prog_num))
+                continue
             else :
                 # add current program's name and timings to prog_names and progs_timing_info,
                 # thus indicating that the current program has timings
-                prog_names.append(prog_name)
-                progs_timing_info.append(timings_info)
+                valid_prog_names.append(prog_name)
+                valid_prob_sizes.append(prob_sizes)
+                valid_prog_timings.append(timings)
 
         # check to see if ended up with any chosen programs
-        # that have timings
-        if len(prog_names) == 0 :
+        # that actually have timings
+        if len(valid_prog_names) == 0 :
             print("None of the programs have timings")
         else :
             # start up the plot
             fig = plt.figure()
-            title = 'Timings vs Problem Size'
+            title = 'Timing vs Problem Size'
             fig.canvas.set_window_title(title) 
 
-            # plotting the timing curves for the chosen programs that have timings
-            for timings_info in progs_timing_info :
-                # organize current program's timings info for plotting
-                sizes   = [timing[0] for timing in timings_info]
-                timings = [timing[1] for timing in timings_info]
+            # plotting the timing curves for the chosen programs that actually have timings
+            for prob_sizes, timings in zip(valid_prob_sizes, valid_prog_timings) :
             
                 # plot the current program's timings
-                plt.plot(sizes, timings, 'o-')
+                plt.plot(prob_sizes, timings, 'o-')
 
             # add overall plotting embellishments 
             plt.xlabel('problem size')
             plt.ylabel('timing (seconds)')
             plt.title(title)
-            plt.legend(prog_names)
+            plt.legend(valid_prog_names)
             plt.show()
 
 # end function: plot_timings
