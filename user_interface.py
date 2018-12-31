@@ -124,13 +124,14 @@
 #                                 choose_program_and_display_timings()
 #                                 delete_program_timings()
 #                                 plot_timings()
-#                          - accomdates modifications to main.get_programs() (and db.get_programs())
-#                                                        main.get_timings()  (and db.get_timings())
-#                              - where data is returned from them with each field's values having their own
-#                                separate list rather than each data row having its own list, which is inside
-#                                of the overall list
-#                              - avoids the calling functions (listed above) having to know the ordering (list indices)
-#                                of entries in a list inside of an overall list
+#                           - accomodates modifications to main.get_programs() (and db.get_programs())
+#                                                          main.get_timings()  (and db.get_timings())
+#                               - where data is returned from them with each field's values having their own
+#                                 separate list rather than each data row having its own list, which is inside
+#                                 of the overall list
+#                               - avoids the calling functions (listed above) having to know the ordering (list indices)
+#                                 of entries in a list inside of an overall list
+#                      - modified top_menu(): except BLANK line to exit program (instead of 0 before)
 #                                 
 # (pf) Patrick Flynn
 #
@@ -257,10 +258,13 @@ def top_menu() :
         print("")
 
         # user inputs the menu option #
-        selection_list = get_ints_from_input("Enter menu option number (0 to exit) : ")
+        selection_list = get_ints_from_input("Enter menu option number (BLANK line to exit) : ")
 
-        # check to see if the required ONE entry was not input or the there was an entry error
-        if selection_list == [] or len(selection_list) > 1 :
+        # check to see if BLANK entry, or the required ONE entry was not input or the there was an entry error
+        if selection_list == [] :
+            print()
+            return
+        elif len(selection_list) > 1 :
             continue
         else :
             selection = selection_list[0]
