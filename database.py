@@ -1,4 +1,4 @@
-# database: Implements the database portion of the pycnumanal application
+# database.py : Implements the database portion of the pycnumanal application
 # 
 #    VERSION 0.13
 #
@@ -6,6 +6,7 @@
 #    - Python 3.x (not tested with Python 2.x)
 #    - SQlite (sqlite3) database used for storage
 #    - no database operations error checking (as of yet)
+#        - starting to add this
 #
 # --------------------------------------------------------
 #
@@ -59,6 +60,7 @@
 #                           - avoids calling functions in other modules having to know the order (list indices)
 #                             of entries in a list inside of an overall list
 #                      - added close_db()
+#                      - modified get_cmd_line_prefix() to account for no prefix found
 #
 # (pf) Patrick Flynn
 #
@@ -77,7 +79,7 @@ import db_exceptions as dbe
 
 def create_db_connection(db_filename, schema_filename) :
     """ Creates the database connection (database file created if needed)
-    
+
         In:  db_filename     - database of all programs and their timings (string)
              schema_filename - structure of the programs/timings tables in the database (string)
         Out: nothing
@@ -88,7 +90,7 @@ def create_db_connection(db_filename, schema_filename) :
     # GLOBAL VARIABLE
     global conn  # programs/timings database connection
     
-    # does the database file exist in the current working directory?
+    # does the database file not exist in the current working directory?
     db_is_new = not os.path.exists(db_filename)
 
     # setup connection to the database
@@ -102,9 +104,9 @@ def create_db_connection(db_filename, schema_filename) :
             conn.executescript(schema)
 
         else :  # database file already exists
-            print('Database exists, assuming contains proper table structures.')
+            print('Database exists, assuming it contains proper table structures.')
  
-        # needed to support cascade deletion
+        # needed to support cascade deletion in SQLite
         conn.execute("PRAGMA foreign_keys = ON")
         
 # end create_db_connection()
@@ -127,7 +129,7 @@ def close_db() :
 def get_program_info(prog_name) :
     """ Get a program's info from the database
 
-        In:  prog_name - name of the program getting info for (string)
+        In:  prog_name       - name of the program getting info for (string)
         Out: prog_desc       - program description (string)
              cmd_line_prefix - command line prefix (string)
     """
@@ -162,7 +164,11 @@ def get_cmd_line_prefix(prog_name) :
 
     cur.execute("SELECT cmd_line_prefix FROM programs WHERE program_name = ?",
                 (prog_name,) )
-    cmd_line_prefix = cur.fetchall()[0][0]
+    data = cur.fetchall()
+
+    cmd_line_prefix = ""
+    if len(data) > 0 :
+        cmd_line_prefix = data[0][0]
     
     return cmd_line_prefix
 
@@ -275,7 +281,7 @@ def add_timing(prog_name, prob_size, timing) :
     """ Add a program's timing for a problem size to the database
 
         In:  prog_name - name of the program getting timings for (string)
-             prog_size - problem size (integer)
+             prob_size - problem size (integer)
              timing    - timing (float)
         Out: nothing
     """ 
@@ -300,6 +306,7 @@ def delete_program_timings(prog_name) :
 
     cur = conn.cursor()
 
+    # assumes database is properly set up for cascade deletion
     cur.execute("DELETE FROM timings WHERE program_name = ?",
                 (prog_name,) )
 
