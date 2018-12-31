@@ -24,7 +24,7 @@ Only tested with:  Python 3.5.5, Linux Ubuntu, sqlite3
 
 Note:
 
-    The timings.db database file may already have programs/timings in it.
+    The timings.db database file may already has programs/timings in it.
     You can use it as is or delete it; when pycnumanal.py is run after
     deleting timings.db, it will create a new blank timings.db database file.
 

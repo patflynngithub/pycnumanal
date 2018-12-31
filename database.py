@@ -1,12 +1,10 @@
 # database.py : Implements the database portion of the pycnumanal application
 # 
-#    VERSION 0.13
+#    VERSION 1.00
 #
 #    - runs on Linux (not tested on Windows)
 #    - Python 3.x (not tested with Python 2.x)
 #    - SQlite (sqlite3) database used for storage
-#    - no database operations error checking (as of yet)
-#        - starting to add this
 #
 # --------------------------------------------------------
 #
@@ -41,9 +39,6 @@
 #                      - modified create_db_connection() to support cascase deletion
 #                          - conn.execute("PRAGMA foreign_keys = ON")
 #
-#    12/22/2018 (pf)   - started process of adding exception handling to database functions
-#                           - get_programs()
-#
 #    12/27/2018 (pf)   - added get_program_info_from_DB()
 #
 #    12/29/2018 (pf)   - changed name of get_program_info_from_DB() to get_program_info()
@@ -62,6 +57,8 @@
 #                      - added close_db()
 #                      - modified get_cmd_line_prefix() to account for no prefix found
 #
+#    12/31/2018 (pf)   - RELEASING AS VERSION 1.0
+#
 # (pf) Patrick Flynn
 #
 # ---------------------------------------------------------
@@ -71,9 +68,6 @@ import os
 
 # third-party modules
 import sqlite3 as sql
-
-# custom modules
-import db_exceptions as dbe
 
 # -----------------------------------------------------------------
 
@@ -167,6 +161,7 @@ def get_cmd_line_prefix(prog_name) :
     data = cur.fetchall()
 
     cmd_line_prefix = ""
+    
     if len(data) > 0 :
         cmd_line_prefix = data[0][0]
     
@@ -183,16 +178,10 @@ def get_programs() :
         Out: prog_names        - retrieved program names (list)
              descriptions      - retrieved program descriptions (list)
              cmd_line_prefixes - retrieved command line prefixes (list)
-        
-        Exceptions generated:
-            - dbe.DB_Error
     """
 
-    try :
-        cur = conn.cursor()
-        cur.execute("SELECT program_name, description, cmd_line_prefix FROM programs")
-    except sql.Error as e :
-        raise dbe.DB_Error("Error getting programs from the database: get_programs()") from e
+    cur = conn.cursor()
+    cur.execute("SELECT program_name, description, cmd_line_prefix FROM programs")
 
     progs  = cur.fetchall()
 
@@ -240,6 +229,8 @@ def delete_program(prog_name) :
 
     cur = conn.cursor()
 
+    # assumes database is properly set up for cascade deletion
+    # so that associated timings in timings table will be deleted as well
     cur.execute("DELETE FROM programs WHERE program_name = ?",
                 (prog_name,) )
 
@@ -306,7 +297,6 @@ def delete_program_timings(prog_name) :
 
     cur = conn.cursor()
 
-    # assumes database is properly set up for cascade deletion
     cur.execute("DELETE FROM timings WHERE program_name = ?",
                 (prog_name,) )
 

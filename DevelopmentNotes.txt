@@ -2,7 +2,7 @@
 08/20/2016:
 ----------
 
-- the OS command-line style of Python calling the external program that returns a timing to the first line of its console output, while it is not the most elegeant way to to this, it is the easiest for the programmer-in-training and is the most flexible in dealing with different types of external programs: C, Fortran, MPI, OpenMP, CUDA, MATLAB, etc.
+- the OS command-line style of Python calling the external program that returns a timing to the first line of its console output, while it is not the most elegeant way to to this, it is the easiest for the programmer-in-training that the original version of this program (in my pycnumanal-lessons GitHub project) and is the most flexible in dealing with different types of external programs: C, Fortran, MPI, OpenMP, CUDA, MATLAB, etc.
 
 - in the external C program, due to using gcc clock() function, timings are in cpu clock ticks (not seconds or minutes). Therefore, they need to be converted to seconds
 

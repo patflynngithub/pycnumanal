@@ -1,6 +1,6 @@
 # pycnumanal: Generate/Plot excution timings of external programs for different problem sizes
 # 
-#    VERSION 0.13
+#    VERSION 1.00
 #
 #    pyc:     Python/C program
 #    numanal: timed numerical analysis routines written in C (could be other languages as well)
@@ -18,7 +18,6 @@
 #    - Python 3.x (not tested with Python 2.x)
 #    - text-based interface
 #    - SQlite (sqlite3) database used for storage
-#    - no database operations error checking (as of yet)
 #
 # --------------------------------------------------------
 #
@@ -81,6 +80,8 @@
 #                                 of entries in a list inside of an overall list
 #                      - modified intial execution section
 #                          - added call to db.close_db()
+#
+#    12/31/2018 (pf)   - RELEASING AS VERSION 1.0
 #
 # (pf) Patrick Flynn
 #
@@ -259,7 +260,7 @@ def generate_and_add_timing(prog_name, prob_size) :
 
 # ===============================================================================================
 #
-#  Execution starts here
+#  Initial execution starts here
 #
 
 if __name__ == "__main__":

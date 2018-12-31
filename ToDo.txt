@@ -1,13 +1,8 @@
 
-(also check list in Lesson13.doc)
-
-- add modify database data capability
+- add modify indivual database entry capability
 
 - more error checking inside Python code
     - database operations error checking
-    - check for duplicates when adding
-        - new program
-        - new timing
     - experiment what happens when C numerical code explodes (e.g. n too large or too small)
 
 - more error checking inside C code
@@ -15,7 +10,6 @@
 
 - when entering program info (program name, description, command line prefix), prompt with entered info
   to verify correctness
-- GUI menuing system
 
 - l2vecnorm C program: check for non-positive vector size
 - improve architecture of C programs
@@ -23,7 +17,13 @@
 - do Fortan versions of C numerical routines
 - do matrix multiplication alternatives in C (programs and array notation vs pointer method)
 
+- try running CUDA C external program
+
 - work on Windows?
 - check running on Windows in code
 - check Python version in code
+
+- implement logging
+
+- GUI menuing system
 

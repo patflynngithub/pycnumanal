@@ -1,6 +1,6 @@
 # user_interface.py: pycnumanal text-based user interface system
 # 
-#    VERSION 0.13
+#    VERSION 1.00
 #
 #    - text-based menus for:
 #
@@ -17,7 +17,6 @@
 #    - Python 3.x (not tested with Python 2.x)
 #    - text-based interface
 #    - SQlite (sqlite3) database used for storage
-#    - no database operations error checking (as of yet)
 #
 # --------------------------------------------------------
 #
@@ -89,9 +88,6 @@
 #                           - add_program()
 #                           - generate_and_add_timings()
 #
-#    12/22/2018 (pf)   - started process of adding database exception handling
-#                           - display_programs()
-#
 #    12/27/2018 (pf)   - modified add_program()
 #                           - logic to check if program already in database
 #                      - added prob_size_in_list()
@@ -132,7 +128,22 @@
 #                               - avoids the calling functions (listed above) having to know the ordering (list indices)
 #                                 of entries in a list inside of an overall list
 #                      - modified top_menu(): except BLANK line to exit program (instead of 0 before)
-#                                 
+#
+#    12/31/2018 (pf)   - modified get_ints_from_input()
+#                           - better handle non-integer input
+#                      - modified get_floats_from_input()
+#                           - better handle non-float input
+#                      - added get_int_from_input()
+#                      - added get_float_from_input()
+#                      - modified manually_add_timings()
+#                           - avoid duplicate problem sizes within one manually entering timings session
+#                             for a chosen program
+#                      - modified generate_and_add_timings()
+#                           - avoid duplicate problem sizes within one manually entering timings session
+#                             for a chosen program
+#
+#    12/31/2018 (pf)   - RELEASING AS VERSION 1.0
+#
 # (pf) Patrick Flynn
 #
 # ======================================================================================
@@ -146,7 +157,11 @@ import matplotlib.pyplot as plt
 #import traceback   (used with "print(traceback.format_exc())")
 
 # custom modules
-import db_exceptions as dbe
+# - There is an import at the end of this file
+#   It is a "ciruclar" import back to pycnumanal.py
+#   I put it there because some Internet sources recommended to put it there instead
+#   of at the beginning. Did not investigate the suggestion. Just put it there to get
+#   it working first thing!
 
 # ======================================================================================
 #
@@ -159,8 +174,8 @@ import db_exceptions as dbe
 def yes_or_no(prompt):
     """ Prompts for a yes or no answer
 
-        In:  prompt     - the prompt for the yes/no input
-        Out: True/False - is answer a yes?
+        In:  prompt     - the prompt for the yes/no input (string)
+        Out: True/False - is answer a yes? (boolean)
     """
 
     answer = input(prompt + " (y/n): ").lower().strip()
@@ -177,26 +192,92 @@ def yes_or_no(prompt):
 
 # -----------------------------------------------------------------
 
-def get_ints_from_input(prompt) :
-    """ Prompts for an input string of integers and returns a list of integers
+def get_int_from_input(prompt) :
+    """ Prompts for an integer input (BLANK entry cancels)
 
-        In:  prompt    - the prompt for the input
-        Out: ints_list - list of integers input by the user
-                         (empty list indicates no entry or entry error)
+        In:  prompt    - the prompt for an integer input  (string)
+        Out: int_list  - the input integer in a list (list)
+                         (empty list indicates no entry)
     """
 
-    ints_string = input(prompt)
-    ints_string_list = ints_string.strip().split()
+    while 1 :
 
-    ints_list = []
-    for int_string in ints_string_list :
-      try :
-         int_value = int(int_string)
-      except ValueError as ex :
-         print('Error: "%s" cannot be converted to an integer!' % (int_string))
-         return []
-      ints_list.append(int_value)
+        int_string = input(prompt)
+        int_string_list = int_string.strip().split()
 
+        if len(int_string_list) == 0 :
+            return []
+        elif len(int_string_list) > 1 :
+            print('INPUT ERROR!')
+            continue
+        else :
+          try :
+            int_value = int(int_string_list[0])
+            return [int_value]
+          except ValueError as ex :
+            print('INPUT ERROR!')
+            continue
+        
+# end function: get_int_from_input
+
+# -----------------------------------------------------------------
+
+def get_float_from_input(prompt) :
+    """ Prompts for an float input  (BLANK entry cancels)
+
+        In:  prompt      - the prompt for an float input  (string)
+        Out: float_list  - the input float in a list (list)
+                           (empty list indicates no entry)
+    """
+
+    while 1 :
+
+        float_string = input(prompt)
+        float_string_list = float_string.strip().split()
+
+        if len(float_string_list) == 0 :
+            return []
+        elif len(float_string_list) > 1 :
+            print('INPUT ERROR!')
+            continue
+        else :
+          try :
+            float_value = float(float_string_list[0])
+            return [float_value]
+          except ValueError as ex :
+            print('INPUT ERROR!')
+            continue
+        
+# end function: get_float_from_input
+
+# -----------------------------------------------------------------
+
+def get_ints_from_input(prompt) :
+    """ Prompts for an input string of integers and returns a list of integers (BLANK entry cancels)
+    
+        In:  prompt    - the prompt for the input  (string)
+        Out: ints_list - list of integers input by the user (list)
+                         (empty list indicates no entry)
+    """
+
+    loop_again = True
+    while loop_again :
+
+        loop_again = False
+        
+        ints_string = input(prompt)
+        ints_string_list = ints_string.strip().split()
+
+        ints_list = []
+        for int_string in ints_string_list :
+          try :
+            int_value = int(int_string)
+            ints_list.append(int_value)
+          except ValueError as ex :
+            print('INPUT ERROR!')
+            loop_again = True
+            break
+        
     return ints_list
 
 # end function: get_ints_from_input
@@ -204,26 +285,31 @@ def get_ints_from_input(prompt) :
 # -----------------------------------------------------------------
 
 def get_floats_from_input(prompt) :
-    """ Prompts for an input string of floats and returns a list of floats
+    """ Prompts for an input string of floats and returns a list of floats (BLANK entry cancels)
 
-        In:  prompt      - the prompt for the input
-        Out: floats_list - list of floats input by the user
-                           (empty list indicates no entry or entry error)
-
+        In:  prompt      - the prompt for the input (string)
+        Out: floats_list - list of floats input by the user (list)
+                           (empty list indicates no entry)
     """
 
-    floats_string = input(prompt)
-    floats_string_list = floats_string.strip().split()
+    loop_again = True
+    while loop_again :
+        
+        loop_again = False
+        
+        floats_string = input(prompt)
+        floats_string_list = floats_string.strip().split()
 
-    floats_list = []
-    for float_string in floats_string_list :
-      try :
-         float_value = float(float_string)
-      except ValueError as ex :
-         print('Error: "%s" cannot be converted to a float!' % (float_string))
-         return []
-      floats_list.append(float_value)
-
+        floats_list = []
+        for float_string in floats_string_list :
+          try :
+            float_value = float(float_string)
+            floats_list.append(float_value)
+          except ValueError as ex :
+            print('INPUT ERROR!')
+            loop_again = True
+            break
+        
     return floats_list
 
 # end function: get_floats_from_input
@@ -258,22 +344,16 @@ def top_menu() :
         print("")
 
         # user inputs the menu option #
-        selection_list = get_ints_from_input("Enter menu option number (BLANK line to exit) : ")
+        selection_list = get_int_from_input("Enter menu option number (BLANK line to exit) : ")
 
-        # check to see if BLANK entry, or the required ONE entry was not input or the there was an entry error
+        # check for no entry
         if selection_list == [] :
             print()
             return
-        elif len(selection_list) > 1 :
-            continue
         else :
             selection = selection_list[0]
 
-        if selection == 0 :    # exit program
-            print()
-            return
-        
-        elif selection == 1 :  # add a program
+        if selection == 1 :    # add a program
             add_program()
 
         elif selection == 2 :  # delete a program (and its timings)
@@ -298,8 +378,8 @@ def top_menu() :
         elif selection == 8 :  # plot timings for program(s)
             plot_timings()
 
-        else :                 # bad entry
-            print("\nBAD ENTRY!")
+        else :                 # improper entry
+            print("\nIMPROPER ENTRY!")
 
 # end function: top_menu
 
@@ -314,12 +394,7 @@ def display_programs() :
              cmd_line_prefixes - command line prefixes (list)        
     """
 
-    try :
-        [prog_names, descriptions, cmd_line_prefixes] = main.get_programs()
-    except dbe.DB_Error as e :
-        print(e)
-        # print(traceback.format_exc())
-        return []
+    [prog_names, descriptions, cmd_line_prefixes] = main.get_programs()
 
     print()
 
@@ -360,10 +435,10 @@ def choose_program() :
         prog_name = ""  # empty string is indicator that no programs found
     else :
         # choose the program
-        prog_num = get_ints_from_input("Choose the program # (BLANK to cancel): ")
+        prog_num = get_int_from_input("Choose the program # (BLANK to cancel): ")
         
-        # was the required single program # inputed or was there an entry error?
-        if prog_num == [] or len(prog_num) > 1 :
+        # check for no entry
+        if prog_num == [] :
             prog_name = ""
         else :
             prog_num = prog_num[0]
@@ -503,14 +578,14 @@ def manually_add_timings() :
         while 1 :
             print()
 
-            prob_size_input = get_ints_from_input("Enter a new problem size (positive integer, BLANK line to exit) : ")
+            prob_size_input = get_int_from_input("Enter a new problem size (positive integer, BLANK line to exit) : ")
 
-            # check if user did not enter the required ONE entry or there was an input error
-            if prob_size_input == [] or len(prob_size_input) > 1 :
+            # check for no entry or non-positive problem size
+            if prob_size_input == [] :
                 return
             elif prob_size_input[0] <= 0 :
                 print("Problem size needs to be > 0")
-                return
+                continue
             else :
                 prob_size = prob_size_input[0]
 
@@ -519,10 +594,10 @@ def manually_add_timings() :
                     print("Problem size already in database for the chosen program")
                     continue
                 
-                timing_input = get_floats_from_input("Enter a timing (nonnegative decimal, BLANK line to exit) : ")
+                timing_input = get_float_from_input("Enter a timing (nonnegative decimal, BLANK line to exit) : ")
                 
-                # check if user did not enter the required ONE entry or there was an input error
-                if timing_input == [] or len(timing_input) > 1 :
+                # check for no entry or negative timing value
+                if timing_input == [] :
                     return
                 elif timing_input[0] < 0 :
                     print("Timing needs to be >= 0")
@@ -530,7 +605,8 @@ def manually_add_timings() :
                 else :
                     main.add_timing(prog_name, prob_size, timing_input[0])
                     print("Timing added to database")
-
+                    prob_sizes.append(prob_size)
+                    
 # end function: manually_add_timings
 
 # -----------------------------------------------------------------
@@ -569,7 +645,7 @@ def generate_and_add_timings() :
         # user inputs the program sizes to generate timings for
         prob_sizes_input = get_ints_from_input("Enter problem sizes to generate timings for (e.g., 10 20 30 40, BLANK to cancel): ")
 
-        # check if user entered anything or there was an input error
+        # check for BLANK entry
         if prob_sizes_input == [] :
             return
         else :
@@ -584,6 +660,8 @@ def generate_and_add_timings() :
                     
                     timing = main.generate_and_add_timing(prog_name, prob_size)
                     print("Timing for problem size {} = {:>.6f} seconds".format(prob_size, timing))
+                    prob_sizes.append(prob_size)
+                    
             print()
                 
 # end function: generate_and_add_timings
@@ -659,7 +737,7 @@ def plot_timings() :
     # user inputs the program #'s to plot timings for
     prog_nums_input = get_ints_from_input("Enter program #'s to plot timings for (e.g., 2 3 4, BLANK to cancel): ")
 
-    # check for blank entry or input error
+    # check for BLANK entry
     if prog_nums_input == [] :
         return
     else :
@@ -698,7 +776,7 @@ def plot_timings() :
         # check to see if ended up with any chosen programs
         # that actually have timings
         if len(valid_prog_names) == 0 :
-            print("None of the programs have timings")
+            print("None of the valid programs have timings")
         else :
             # start up the plot
             fig = plt.figure()
@@ -722,4 +800,6 @@ def plot_timings() :
 
 # -----------------------------------------------------------------
 
+
+# custom module
 import pycnumanal as main
