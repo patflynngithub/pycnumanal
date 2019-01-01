@@ -1,4 +1,6 @@
 
+- CHANGE SO THAT TIMINGS DONE IN PYTHON RATHER THAN THE EXTERNAL PROGRAM
+
 - add modify indivual database entry capability
 
 - more error checking inside Python code
